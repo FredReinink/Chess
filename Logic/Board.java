@@ -17,6 +17,22 @@ public class Board {
 		return board;
 	}
 	
+	public String toString() {
+		String result = "";
+		
+		result += "Player white has pieces: " + white.toString();
+		result += "\nPlayer black has pieces: " + black.toString();
+		result += "\nBoard representation:\n";
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				result += " " + board[i][j].toString();
+			}
+			result += "\n";	
+			}
+		
+		return result;
+	}
+	
 	/**
 	 * Sole constructor.
 	 * Builds a board out of squares. Each square is initialized with x and y coordinates.
@@ -36,39 +52,35 @@ public class Board {
 		}
 		placeOrderedPieces(white);
 		placeOrderedPieces(black);
+		System.out.println(this.toString());
 	}
 	
 	/**
-	 * Places pieces of a specified player on the board. Warning: Assumes that the player's piece list adheres to the following encoding:
+	 * Places pieces of a specified player on the board. Assumes that the player's piece list adheres to the following encoding:
 	 * [pawn, pawn, pawn, pawn, pawn, pawn, pawn, pawn, rook, knight, bishop, queen, king, bishop, knight, rook]
 	 * 
 	 * @param player the player whose pieces are to be placed
 	 */
 	public void placeOrderedPieces(Player player) {
 		int pawnRow;
-		int rookRow;
+		int kingRow;
 		
 		if (player.getName() == Name.white) {
 			pawnRow = 6;
-			rookRow = 7;
+			kingRow = 7;
 		} else {
 			pawnRow = 1;
-			rookRow = 0;
+			kingRow = 0;
 		}
 		
 		ArrayList<Piece> pieces = player.getPieces();
-		
-		//place pawns (pawns are the first 8 elements of the list)
+
+		int j = 8;
 		for (int i = 0; i < 8; i++) {
 			board[pawnRow][i].setPiece(pieces.get(i));
-		}
-		//places the other row (stored in the 8 remaining elements of the list)
-		for (int i = 0; i < 8; i++) {
-			board[rookRow][i].setPiece(pieces.get(i));
-		}
-		
-		
-		
+			board[kingRow][i].setPiece(pieces.get(j));
+			j++;
+		}	
 	}
 	
 	/**
@@ -76,10 +88,10 @@ public class Board {
 	 * Helper method for placeOrderedPieces
 	 * 
 	 * @param p the piece to be placed
-	 * @param x the x coordinate of the square to place the piece
-	 * @param y the y coordinate of the square to place the piece
+	 * @param row the row of the square to place the piece
+	 * @param column the column coordinate of the square to place the piece
 	 */
-	public void placePiece(Piece p, int x, int y) {
-		board[x][y].setPiece(p);
+	public void placePiece(Piece p, int row, int column) {
+		board[row][column].setPiece(p);
 	}
 }

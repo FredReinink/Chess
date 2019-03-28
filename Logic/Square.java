@@ -3,31 +3,38 @@ package Logic;
 import Pieces.Piece;
 
 public class Square {
-	private int x;
-	private int y;
+	private int row;
+	private int column;
 	private Piece piece = null;
 	private boolean attacked;
 	
-	public Square(int x, int y) {
-		this.x = x;
-		this.y = y;
+	public String toString() {
+		if (piece == null) {
+			return "[              ]";
+		}
+		return piece.toString();
 	}
 	
-	public int getX() {
-		return x;
+	public Square(int row, int column) {
+		this.row = row;
+		this.column = column;
 	}
 	
-	public int getY() {
-		return y;
+	public int getRow() {
+		return row;
+	}
+	
+	public int getColumn() {
+		return column;
 	}
 	
 	public Piece getPiece() {
 		return piece;
 	}
 	
-	public Square(int x, int y, Piece piece) {
-		this.x = x;
-		this.y = y;
+	public Square(int row, int column, Piece piece) {
+		this.row = row;
+		this.column = column;
 		this.piece = piece;
 	}
 	

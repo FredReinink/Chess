@@ -21,7 +21,7 @@ import Resources.Name;
 import Runner.Controller;
 
 public class Display extends JPanel{
-	
+
 	public static final String WHITE_PAWN_PATH = "src/Resources/PieceImages/WhitePawn.png";
 	public static final String BLACK_PAWN_PATH = "src/Resources/PieceImages/BlackPawn.png";
 	public static final String WHITE_BISHOP_PATH = "src/Resources/PieceImages/WhiteBishop.png";
@@ -34,125 +34,151 @@ public class Display extends JPanel{
 	public static final String BLACK_QUEEN_PATH = "src/Resources/PieceImages/BlackQueen.png";
 	public static final String BLACK_ROOK_PATH = "src/Resources/PieceImages/BlackRook.png";
 	public static final String WHITE_ROOK_PATH = "src/Resources/PieceImages/WhiteRook.png";
-	
+
 	public static final int CHECKER_SIZE = 80;
 	public static final int FRAME_WIDTH_OFFSET = 6;
 	public static final int FRAME_HEIGHT_OFFSET = 29;
 	public static final int FRAME_WIDTH = CHECKER_SIZE * 8 + FRAME_WIDTH_OFFSET;
 	public static final int FRAME_HEIGHT = CHECKER_SIZE * 8 + FRAME_HEIGHT_OFFSET;
-	
+
 	public static final String BROWN_RGB_VALUE = "10046464";
 	public static final Color WHITE_SQUARE_COLOUR = Color.LIGHT_GRAY;
 	public static final Color BLACK_SQUARE_COLOUR = Color.decode(BROWN_RGB_VALUE); 
-	
-	
+
+
 	private Controller controller;
 	private Graphics g;
 	private Board board;
-	
+
 	public void setBoard(Board board) {
 		this.board = board;
 	}
-	
-    public Display (Controller c){
-    	controller = c;
-    	addMouseListener(controller);
-        JFrame frame = new JFrame();
-        frame.setSize(FRAME_WIDTH,FRAME_HEIGHT);
-        frame.getContentPane().add(this);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.setVisible(true);
 
-    }
-    
-    public void paint(Graphics g){
-    	this.g = g;
-    
-    	g.setColor(WHITE_SQUARE_COLOUR);
-    	g.fillRect(0, 0, CHECKER_SIZE * 8, CHECKER_SIZE * 8);
-    	
-    	g.setColor(BLACK_SQUARE_COLOUR);
-    	//Paints the checkers. Checkers are black when the row index is even and the column index is odd or the row index is odd and the column index is even
-    	//i == rows j == columns
-    	for (int i = 0; i < 8; i++) {
-    		for (int j = 0; j < 8; j++) {
-    			if ((i % 2 == 0 && j % 2 == 1) || (i % 2== 1 && j % 2 == 0)) {
-    				g.fillRect(i*CHECKER_SIZE, j*CHECKER_SIZE, CHECKER_SIZE, CHECKER_SIZE);
-    			}
-    		}
-    	}
-    	if (board != null) {
-    		
-    	}
-    	
-    	drawPieces();
-    }
-    
-    public void drawPieces() {
-    	File pieceFile = null;
-    	Square[][] squares = board.getSquares();
-    	
-    	for (Square[] s : squares) {
-    		for (Square square : s) {
-    			Piece piece = square.getPiece();
-    			if (piece instanceof Pawn) {
-    				if (piece.getOwner().getName() == Name.white) {
-    					pieceFile = new File(WHITE_PAWN_PATH);
-    				} else {
-    					pieceFile = new File(BLACK_PAWN_PATH);
-    				}
-    			} else if (piece instanceof Bishop) {
-    				if (piece.getOwner().getName() == Name.white) {
-    					pieceFile = new File(WHITE_BISHOP_PATH);
-    				} else {
-    					pieceFile = new File(BLACK_BISHOP_PATH);
-    				}
-    			} else if (piece instanceof Knight) {
-    				if (piece.getOwner().getName() == Name.white) {
-    					pieceFile = new File(WHITE_KNIGHT_PATH);
-    				} else {
-    					pieceFile = new File(BLACK_KNIGHT_PATH);
-    				}
-    			} else if (piece instanceof Rook) {
-    				if (piece.getOwner().getName() == Name.white) {
-    					pieceFile = new File(WHITE_ROOK_PATH);
-    				} else {
-    					pieceFile = new File(BLACK_ROOK_PATH);
-    				}
-    			} else if (piece instanceof King) {
-    				if (piece.getOwner().getName() == Name.white) {
-    					pieceFile = new File(WHITE_KING_PATH);
-    				} else {
-    					pieceFile = new File(BLACK_KING_PATH);
-    				}
-    			} else if (piece instanceof Queen) {
-    				if (piece.getOwner().getName() == Name.white) {
-    					pieceFile = new File(WHITE_QUEEN_PATH);
-    				} else {
-    					pieceFile = new File(BLACK_QUEEN_PATH);
-    				}
-    			}
-    			
-    	    	Image pieceImage;
-				try {
-					pieceImage = ImageIO.read(pieceFile);
-	    	    	Image scaledImage = pieceImage.getScaledInstance(CHECKER_SIZE, CHECKER_SIZE, 0);
-	    	    	g.drawImage(scaledImage, square.getX(), square.getY(), null);
-				} catch (IOException e) {
-					System.out.println("Could not load piece image resource");
-					e.printStackTrace();
-				} catch (NullPointerException e) {
-					System.out.println("Could not find instanceof (Piece)");
-					e.printStackTrace();
+	public Display (Controller c){
+		controller = c;
+		addMouseListener(controller);
+		JFrame frame = new JFrame();
+		frame.setSize(FRAME_WIDTH,FRAME_HEIGHT);
+		frame.getContentPane().add(this);
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		frame.setVisible(true);
+	}
+
+	public void paint(Graphics g){
+		this.g = g;
+
+		g.setColor(WHITE_SQUARE_COLOUR);
+		g.fillRect(0, 0, CHECKER_SIZE * 8, CHECKER_SIZE * 8);
+
+		g.setColor(BLACK_SQUARE_COLOUR);
+		//Paints the checkers. Checkers are black when the row index is even and the column index is odd or the row index is odd and the column index is even
+		//i == rows j == columns
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				if ((i % 2 == 0 && j % 2 == 1) || (i % 2== 1 && j % 2 == 0)) {
+					g.fillRect(i*CHECKER_SIZE, j*CHECKER_SIZE, CHECKER_SIZE, CHECKER_SIZE);
 				}
-    		}
-    	}
-    }
-    
-    public int transformCoordinate(int x) {
-    	return 0;
-    }
-    
+			}
+		}
+		if (board != null) {
+
+		}
+
+		drawAllPieces();
+	}
+
+	/**
+	 * Draws all pieces on the board
+	 */
+	public void drawAllPieces() {
+		Square[][] squares = board.getSquares();
+
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				Piece piece = squares[i][j].getPiece();
+				if (piece != null) {
+					drawPiece(findFile(piece),squares[i][j]);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * @param piece The piece to find the image file of
+	 * @return returns Image File of the desired piece
+	 */
+	public File findFile(Piece piece) {
+		File pieceFile = null;
+
+		if (piece instanceof Pawn) {
+			if (piece.getOwner().getName() == Name.white) {
+				pieceFile = new File(WHITE_PAWN_PATH);
+			} else {
+				pieceFile = new File(BLACK_PAWN_PATH);
+			}
+		} else if (piece instanceof Bishop) {
+			if (piece.getOwner().getName() == Name.white) {
+				pieceFile = new File(WHITE_BISHOP_PATH);
+			} else {
+				pieceFile = new File(BLACK_BISHOP_PATH);
+			}
+		} else if (piece instanceof Knight) {
+			if (piece.getOwner().getName() == Name.white) {
+				pieceFile = new File(WHITE_KNIGHT_PATH);
+			} else {
+				pieceFile = new File(BLACK_KNIGHT_PATH);
+			}
+		} else if (piece instanceof Rook) {
+			if (piece.getOwner().getName() == Name.white) {
+				pieceFile = new File(WHITE_ROOK_PATH);
+			} else {
+				pieceFile = new File(BLACK_ROOK_PATH);
+			}
+		} else if (piece instanceof King) {
+			if (piece.getOwner().getName() == Name.white) {
+				pieceFile = new File(WHITE_KING_PATH);
+			} else {
+				pieceFile = new File(BLACK_KING_PATH);
+			}
+		} else if (piece instanceof Queen) {
+			if (piece.getOwner().getName() == Name.white) {
+				pieceFile = new File(WHITE_QUEEN_PATH);
+			} else {
+				pieceFile = new File(BLACK_QUEEN_PATH);
+			}
+		}
+		return pieceFile;
+	}
+
+	/**
+	 * Draws the image contained by the file on the specified square
+	 * @param pieceFile the file containing the image to draw
+	 * @param square the square to draw the image on
+	 */
+	public void drawPiece(File pieceFile, Square square) {
+		Image pieceImage;
+		try {
+			pieceImage = ImageIO.read(pieceFile);
+			Image scaledImage = pieceImage.getScaledInstance(CHECKER_SIZE, CHECKER_SIZE, 0);
+			g.drawImage(scaledImage, transformCoordinate(square.getColumn()), transformCoordinate(square.getRow()), null);
+		} catch (IOException e) {
+			System.out.println("Could not load piece image resource");
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.println("Could not find instanceof (Piece)");
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Transforms a board coordinate into an absolute position coordinate on the JFrame
+	 * @param coord the board coordinate to transform
+	 * @return returns the absolute position of the coord
+	 */
+	public int transformCoordinate(int coord) {
+		return coord * CHECKER_SIZE;
+	}
+
 }

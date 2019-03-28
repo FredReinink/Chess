@@ -12,9 +12,9 @@ public class Controller implements MouseListener{
 	
 	private Display display = null;
 	private boolean gameComplete = false;
-	Player white;
-	Player black;
-	Board board;
+	private Player white;
+	private Player black;
+	private Board board;
 	
 	public Board getBoard() {
 		return board;
@@ -29,6 +29,9 @@ public class Controller implements MouseListener{
 		display = d;
 	}
 	
+	/**
+	 * Creates two new player objects
+	 */
 	public void createPlayers() {
 		white = new Player(Name.white);
 		black = new Player(Name.black);
@@ -48,7 +51,7 @@ public class Controller implements MouseListener{
 		squarePressed(e);
 	}
 	public void squarePressed(MouseEvent e) {
-		System.out.println((e.getX() / Display.CHECKER_SIZE) + " " + e.getY() / Display.CHECKER_SIZE);
+		System.out.println((e.getY() / Display.CHECKER_SIZE) + " " + e.getX() / Display.CHECKER_SIZE);
 	}
 	
 	@Override

@@ -16,6 +16,10 @@ public class Player {
 		return pieces;
 	}
 	
+	public String toString() {
+		return pieces.toString();
+	}
+	
 	/**
 	 * @return the player's name 
 	 */
@@ -36,7 +40,7 @@ public class Player {
 		pieces = new ArrayList<Piece>();
 		
 		//Create pawns
-		for (int i = 0; i <= 8 ; i++) {
+		for (int i = 0; i < 8 ; i++) {
 			pieces.add(new Pawn(this));
 		}
 		
