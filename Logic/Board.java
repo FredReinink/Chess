@@ -6,9 +6,9 @@ import Pieces.*;
 import Resources.Name;
 
 public class Board {
-	Square[][] board;
-	Player white;
-	Player black;
+	private Square[][] board;
+	private Player white;
+	private Player black;
 	
 	/**
 	 * @return returns the 2d array of squares that make up this board.

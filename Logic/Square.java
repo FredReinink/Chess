@@ -36,10 +36,12 @@ public class Square {
 		this.row = row;
 		this.column = column;
 		this.piece = piece;
+		piece.setPosition(new Coordinate(row, column));
 	}
 	
 	public void setPiece(Piece piece) {
 		this.piece = piece;
+		piece.setPosition(new Coordinate(row, column));
 	}
 	
 	public void removePiece() {
@@ -49,4 +51,5 @@ public class Square {
 	public void setAggression(boolean b) {
 		attacked = b;
 	}
+	
 }

@@ -7,6 +7,7 @@ import java.awt.event.MouseListener;
 import GUI.Display;
 import Resources.Name;
 import Logic.*;
+import Pieces.Piece;
 
 public class Controller implements MouseListener{
 	
@@ -15,6 +16,20 @@ public class Controller implements MouseListener{
 	private Player white;
 	private Player black;
 	private Board board;
+	private Name turn;
+	private Square selectedSquare;
+	
+	public void setSelectedSquare(Square s) {
+		selectedSquare = s;
+	}
+	
+	public Square getSelectedSquare() {
+		return selectedSquare;
+	}
+	
+	public Name getTurn() {
+		return turn;
+	}
 	
 	public Board getBoard() {
 		return board;
@@ -23,6 +38,7 @@ public class Controller implements MouseListener{
 	public Controller() {
 		createPlayers();
 		createBoard();
+		turn = Name.white;
 	}
 
 	public void setDisplay(Display d) {
@@ -42,15 +58,27 @@ public class Controller implements MouseListener{
 	}
 	
 	public void start() {
+		for (Piece p : white.getPieces()) {
+			p.setValidMoves(board);
+		}
+		for (Piece p : black.getPieces()) {
+			p.setValidMoves(board);
+		}
 		
-		while(gameComplete == false);
+		while(gameComplete == false) {
+
+		}
 	}
 	
 	@Override
 	public void mousePressed(MouseEvent e) {
 		squarePressed(e);
 	}
+	
 	public void squarePressed(MouseEvent e) {
+		setSelectedSquare(board.getSquares()[e.getY() / Display.CHECKER_SIZE][e.getX() / Display.CHECKER_SIZE]);
+		display.revalidate();
+		display.repaint();
 		System.out.println((e.getY() / Display.CHECKER_SIZE) + " " + e.getX() / Display.CHECKER_SIZE);
 	}
 	

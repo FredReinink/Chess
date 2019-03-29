@@ -87,6 +87,27 @@ public class Display extends JPanel{
 		}
 
 		drawAllPieces();
+		drawSquareHighlights();
+	}
+	
+	public void drawSquareHighlights(){
+		Square selectedSquare = controller.getSelectedSquare();
+		
+		try {
+			System.out.println("the selected piece is " + selectedSquare.getPiece() + " at position Row: " + selectedSquare.getRow() + " Column: " + selectedSquare.getColumn());
+			ArrayList<Square> validMoves = selectedSquare.getPiece().getValidMoves();
+			
+			System.out.println("this piece has " + validMoves.size() + " valid moves");
+			
+			for (Square s : validMoves) {
+				g.setColor(Color.YELLOW);
+				g.drawRect(s.getColumn()*CHECKER_SIZE, s.getRow()*CHECKER_SIZE, CHECKER_SIZE, CHECKER_SIZE);
+				g.drawRect((s.getColumn()*CHECKER_SIZE)+1, (s.getRow()*CHECKER_SIZE)+1, CHECKER_SIZE-2, CHECKER_SIZE-2);
+				g.drawRect((s.getColumn()*CHECKER_SIZE)+2, (s.getRow()*CHECKER_SIZE)+2, CHECKER_SIZE-4, CHECKER_SIZE-4);
+			}
+		} catch (NullPointerException e) {
+			//do nothing. Null pointer here means selectedSquare has not been initialized yet.
+		}
 	}
 
 	/**
@@ -166,10 +187,7 @@ public class Display extends JPanel{
 		} catch (IOException e) {
 			System.out.println("Could not load piece image resource");
 			e.printStackTrace();
-		} catch (NullPointerException e) {
-			System.out.println("Could not find instanceof (Piece)");
-			e.printStackTrace();
-		}
+		} 
 	}
 
 	/**
