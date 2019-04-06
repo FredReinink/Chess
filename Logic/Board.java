@@ -17,6 +17,19 @@ public class Board {
 		return board;
 	}
 	
+	public void update() {
+		setValidMoves();
+	}
+	
+	public void setValidMoves() {
+		for (Piece p : white.getPieces()) {
+			p.setValidMoves(this);
+		}
+		for (Piece p : black.getPieces()) {
+			p.setValidMoves(this);
+		}
+	}
+	
 	public String toString() {
 		String result = "";
 		
@@ -47,7 +60,7 @@ public class Board {
 		board = new Square[8][8];
 		for (int i = 0; i < 8; i ++) {
 			for (int j = 0; j < 8; j ++) {
-				board[i][j] = new Square(i,j);
+				board[i][j] = new Square(new Coordinate(i,j));
 			}
 		}
 		placeOrderedPieces(white);
@@ -85,13 +98,12 @@ public class Board {
 	
 	/**
 	 * Places one piece on the square with the designated coordinates
-	 * Helper method for placeOrderedPieces
 	 * 
 	 * @param p the piece to be placed
 	 * @param row the row of the square to place the piece
 	 * @param column the column coordinate of the square to place the piece
 	 */
-	public void placePiece(Piece p, int row, int column) {
-		board[row][column].setPiece(p);
+	public void placePiece(Piece p, Coordinate position) {
+		board[position.getRow()][position.getColumn()].setPiece(p);
 	}
 }

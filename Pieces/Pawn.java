@@ -11,20 +11,28 @@ public class Pawn extends Piece{
 
 	@Override
 	public void setValidMoves(Board board) {
-		validMoves.removeAll(validMoves);
+		resetMoves();
 		Square[][] squares = board.getSquares();
 		
 		int startingRow;
+		int promotionRow;
 		int moveOffset;
 		if (this.getOwner().getName() == Name.white) {
 			startingRow = 6;
+			promotionRow = 0;
 			moveOffset = -1;
 		} else {
 			startingRow = 1;
+			promotionRow = 7;
 			moveOffset = 1;
 		}
 		
-		//if the square immediately in front of the pawn does not contain a piece, it is a valid move
+		if (this.position.getRow() == promotionRow) {
+			//promotion
+			return;
+		}
+		
+		//if the square immediately in front of sthe pawn does not contain a piece, it is a valid move
 		Square validCandidate = squares[position.getRow() + moveOffset][position.getColumn()];
 		if (!containsPiece(validCandidate)) {
 			validMoves.add(validCandidate);
@@ -53,41 +61,6 @@ public class Pawn extends Piece{
 		}
 	}
 	
-	/**
-	 * Determines if there is an enemy piece on the square
-	 * @param square the square to check
-	 * @return
-	 */
-	public boolean containsEnemyPiece(Square square) {
-		if ((square.getPiece() != null) && (!(square.getPiece().owner.getName() == this.owner.getName()))) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Determines if there is a friendly piece on the square
-	 * @param square the square to check
-	 * @return
-	 */
-	public boolean containsFriendlyPiece(Square square) {
-		if ((square.getPiece() != null) && (square.getPiece().owner.getName() == this.owner.getName())) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Determines if there is a piece on the square
-	 * @param square the square to check
-	 * @return
-	 */
-	public boolean containsPiece(Square square) {
-		if (square.getPiece() != null) {
-			return true;
-		}
-		return false;
-		
-	}
+
 
 }

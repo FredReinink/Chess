@@ -15,6 +15,8 @@ public class King extends Piece {
 
 	@Override
 	public void setValidMoves(Board board){		
+		validMoves.removeAll(validMoves);
+		Square[][] squares = board.getSquares();
 	}
 
 }

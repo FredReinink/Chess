@@ -3,53 +3,61 @@ package Logic;
 import Pieces.Piece;
 
 public class Square {
-	private int row;
-	private int column;
+	private Coordinate position;
 	private Piece piece = null;
 	private boolean attacked;
-	
+	private boolean enPassentAvailable = false;
+
 	public String toString() {
 		if (piece == null) {
 			return "[              ]";
 		}
 		return piece.toString();
 	}
-	
-	public Square(int row, int column) {
-		this.row = row;
-		this.column = column;
+
+	public void setEnPassentAvailable(boolean b) {
+		enPassentAvailable = b;
+	}
+
+	public Square(Coordinate c) {
+		position = c;
+	}
+
+	public Coordinate getPosition() {
+		return position;
 	}
 	
 	public int getRow() {
-		return row;
+		return position.getRow();
 	}
 	
 	public int getColumn() {
-		return column;
+		return position.getColumn();
 	}
-	
+
 	public Piece getPiece() {
 		return piece;
 	}
-	
-	public Square(int row, int column, Piece piece) {
-		this.row = row;
-		this.column = column;
+
+	public Square(Coordinate c, Piece piece) {
+		position = c;
 		this.piece = piece;
-		piece.setPosition(new Coordinate(row, column));
+		piece.setPosition(c);
 	}
-	
+
 	public void setPiece(Piece piece) {
 		this.piece = piece;
-		piece.setPosition(new Coordinate(row, column));
+		if (piece != null) {
+			piece.setPosition(position);
+		}
 	}
-	
+
 	public void removePiece() {
 		piece = null;
 	}
-	
+
 	public void setAggression(boolean b) {
 		attacked = b;
 	}
-	
+
 }

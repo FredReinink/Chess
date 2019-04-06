@@ -15,6 +15,14 @@ public class Knight extends Piece{
 
 	@Override
 	public void setValidMoves(Board board){
+		resetMoves();
+		Square[][] squares = board.getSquares();
+		
+		
+	}
+	
+	public void knightHelper(Board board, Square validCandidate) {
+		
 	}
 
 }

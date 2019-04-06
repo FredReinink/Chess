@@ -58,12 +58,7 @@ public class Controller implements MouseListener{
 	}
 	
 	public void start() {
-		for (Piece p : white.getPieces()) {
-			p.setValidMoves(board);
-		}
-		for (Piece p : black.getPieces()) {
-			p.setValidMoves(board);
-		}
+		board.update();
 		
 		while(gameComplete == false) {
 
@@ -76,10 +71,15 @@ public class Controller implements MouseListener{
 	}
 	
 	public void squarePressed(MouseEvent e) {
-		setSelectedSquare(board.getSquares()[e.getY() / Display.CHECKER_SIZE][e.getX() / Display.CHECKER_SIZE]);
+		Square pressedSquare = board.getSquares()[e.getY() / Display.CHECKER_SIZE][e.getX() / Display.CHECKER_SIZE];
+		if (selectedSquare != null && selectedSquare.getPiece() != null && selectedSquare.getPiece().getValidMoves().contains(pressedSquare)) {
+			selectedSquare.getPiece().move(board, pressedSquare.getPosition());
+		} else {
+			setSelectedSquare(pressedSquare);
+		}
+		board.update();
 		display.revalidate();
 		display.repaint();
-		System.out.println((e.getY() / Display.CHECKER_SIZE) + " " + e.getX() / Display.CHECKER_SIZE);
 	}
 	
 	@Override

@@ -97,11 +97,13 @@ public class Display extends JPanel{
 			System.out.println("the selected piece is " + selectedSquare.getPiece() + " at position Row: " + selectedSquare.getRow() + " Column: " + selectedSquare.getColumn());
 			ArrayList<Square> validMoves = selectedSquare.getPiece().getValidMoves();
 			
+			
 			System.out.println("this piece has " + validMoves.size() + " valid moves");
 			
 			for (Square s : validMoves) {
 				g.setColor(Color.YELLOW);
 				g.drawRect(s.getColumn()*CHECKER_SIZE, s.getRow()*CHECKER_SIZE, CHECKER_SIZE, CHECKER_SIZE);
+				//make rectangle thicker
 				g.drawRect((s.getColumn()*CHECKER_SIZE)+1, (s.getRow()*CHECKER_SIZE)+1, CHECKER_SIZE-2, CHECKER_SIZE-2);
 				g.drawRect((s.getColumn()*CHECKER_SIZE)+2, (s.getRow()*CHECKER_SIZE)+2, CHECKER_SIZE-4, CHECKER_SIZE-4);
 			}
