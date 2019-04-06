@@ -1,11 +1,6 @@
 package Pieces;
 
-import java.util.ArrayList;
-
-import Logic.Board;
-import Logic.Coordinate;
-import Logic.Player;
-import Logic.Square;
+import Logic.*;
 
 public class Bishop extends Piece{
 
@@ -19,69 +14,41 @@ public class Bishop extends Piece{
 		Square[][] squares = board.getSquares();
 		
 		//up left
+		boolean blocked = false;
 		int row = position.getRow() - 1;
 		int column = position.getColumn() - 1;
-		while (row >= 0 && column >= 0) {
-			Square validCandidate = squares[row][column];
-			if (validCandidate.getPiece() == null) {
-				validMoves.add(validCandidate);
-			} else if (containsEnemyPiece(validCandidate)) {
-				validMoves.add((validCandidate));
-				break;
-			} else if (containsFriendlyPiece(validCandidate)) {
-				break;
-			}
+		while (row >= 0 && column >= 0 && blocked == false) {
+			blocked = vectorMoveHelper(squares[row][column]);
 			row--;
 			column--;
 		}
 		
 		//up right
+		blocked = false;
 		row = position.getRow() - 1;
 		column = position.getColumn() + 1;
-		while (row >= 0 && column <= 7) {
-			Square validCandidate = squares[row][column];
-			if (validCandidate.getPiece() == null) {
-				validMoves.add(validCandidate);
-			} else if (containsEnemyPiece(validCandidate)) {
-				validMoves.add((validCandidate));
-				break;
-			} else if (containsFriendlyPiece(validCandidate)) {
-				break;
-			}
+		while (row >= 0 && column <= 7 && blocked == false) {
+			blocked = vectorMoveHelper(squares[row][column]);
 			row--;
 			column++;
 		}
 		
 		//down left
+		blocked = false;
 		row = position.getRow() + 1;
 		column = position.getColumn() - 1;
-		while (row <= 7 && column >= 0) {
-			Square validCandidate = squares[row][column];
-			if (validCandidate.getPiece() == null) {
-				validMoves.add(validCandidate);
-			} else if (containsEnemyPiece(validCandidate)) {
-				validMoves.add((validCandidate));
-				break;
-			} else if (containsFriendlyPiece(validCandidate)) {
-				break;
-			}
+		while (row <= 7 && column >= 0 && blocked == false) {
+			blocked = vectorMoveHelper(squares[row][column]);
 			row++;
 			column--;
 		}
 		
 		//down right
+		blocked = false;
 		row = position.getRow() + 1;
 		column = position.getColumn() + 1;
-		while (row <= 7 && column <= 7) {
-			Square validCandidate = squares[row][column];
-			if (validCandidate.getPiece() == null) {
-				validMoves.add(validCandidate);
-			} else if (containsEnemyPiece(validCandidate)) {
-				validMoves.add((validCandidate));
-				break;
-			} else if (containsFriendlyPiece(validCandidate)) {
-				break;
-			}
+		while (row <= 7 && column <= 7 && blocked == false) {
+			blocked = vectorMoveHelper(squares[row][column]);
 			row++;
 			column++;
 		}

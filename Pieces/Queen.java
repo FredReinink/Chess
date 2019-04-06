@@ -15,7 +15,18 @@ public class Queen extends Piece{
 
 	@Override
 	public void setValidMoves(Board board){
+		resetMoves();
+		Bishop bishop = new Bishop(this.owner);
+		bishop.setPosition(this.position);
 		
+		Rook rook = new Rook(this.owner);
+		rook.setPosition(this.position);
+		
+		rook.setValidMoves(board);
+		bishop.setValidMoves(board);
+		
+		validMoves.addAll(rook.getValidMoves());
+		validMoves.addAll(bishop.getValidMoves());
 	}
 
 }

@@ -3,6 +3,7 @@ package Pieces;
 import java.util.ArrayList;
 
 import Logic.Board;
+import Logic.ChessUtility;
 import Logic.Coordinate;
 import Logic.Player;
 import Logic.Square;
@@ -16,13 +17,18 @@ public class Knight extends Piece{
 	@Override
 	public void setValidMoves(Board board){
 		resetMoves();
-		Square[][] squares = board.getSquares();
+		int currentRow = this.position.getRow();
+		int currentColumn = this.position.getColumn();
 		
-		
-	}
-	
-	public void knightHelper(Board board, Square validCandidate) {
-		
+		for (int i = -2; i <= 2; i+=4) {
+			for (int j = -1; j <= 1; j+=2) {
+				Coordinate c = new Coordinate(currentRow + i, currentColumn + j);
+				pointMoveHelper(board,c);
+				
+				c = new Coordinate(currentRow + j, currentColumn + i);
+				pointMoveHelper(board,c);
+			}
+		}
 	}
 
 }

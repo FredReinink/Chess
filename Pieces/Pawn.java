@@ -32,22 +32,22 @@ public class Pawn extends Piece{
 			return;
 		}
 		
-		//if the square immediately in front of sthe pawn does not contain a piece, it is a valid move
+		//if the square immediately in front of the pawn does not contain a piece, it is a valid move
 		Square validCandidate = squares[position.getRow() + moveOffset][position.getColumn()];
-		if (!containsPiece(validCandidate)) {
+		if (!ChessUtility.containsPiece(validCandidate)) {
 			validMoves.add(validCandidate);
 		}
 		//if the square to the right of the pawn contains an enemy piece, it is a valid move
 		if (position.getColumn() != 7) {
 			validCandidate = squares[position.getRow() + moveOffset][position.getColumn()+1];
-			if (containsEnemyPiece(validCandidate)) {
+			if (ChessUtility.containsEnemyPiece(validCandidate,this.owner.getName())) {
 				validMoves.add(validCandidate);
 			}
 		}
 		//if the square to the left of the pawn contains an enemy piece, it is a valid move
 		if (position.getColumn() != 0) {
 			validCandidate = squares[position.getRow() + moveOffset][position.getColumn()-1];
-			if (containsEnemyPiece(validCandidate)) {
+			if (ChessUtility.containsEnemyPiece(validCandidate,this.owner.getName())) {
 				validMoves.add(validCandidate);
 			}
 		}
@@ -55,7 +55,7 @@ public class Pawn extends Piece{
 		if (position.getRow() == startingRow) {
 			validCandidate = squares[position.getRow() + (moveOffset*2)][position.getColumn()];
 			Square inTheWay = squares[position.getRow() + moveOffset][position.getColumn()];
-			if ((!containsPiece(validCandidate)) && (!containsPiece(inTheWay))) {
+			if ((!ChessUtility.containsPiece(validCandidate)) && (!ChessUtility.containsPiece(inTheWay))) {
 				validMoves.add(validCandidate);
 			}
 		}
