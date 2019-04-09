@@ -18,7 +18,7 @@ public class Coordinate {
 	}
 	
 	/**
-	 * Method returns whether the coordinate is off the board
+	 * Determines if the coordinate is off the board
 	 * @return true if off board, false otherwise
 	 */
 	public boolean offBoard() {

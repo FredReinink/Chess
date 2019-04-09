@@ -62,6 +62,7 @@ public class Display extends JPanel{
 		frame.getContentPane().add(this);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setTitle("Chess");
 		frame.setResizable(false);
 		frame.setVisible(true);
 	}
@@ -193,7 +194,7 @@ public class Display extends JPanel{
 	}
 
 	/**
-	 * Transforms a board coordinate into an absolute position coordinate on the JFrame
+	 * Transforms a board coordinate into an absolute coordinate on the JFrame
 	 * @param coord the board coordinate to transform
 	 * @return returns the absolute position of the coord
 	 */

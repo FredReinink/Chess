@@ -27,6 +27,17 @@ public class Controller implements MouseListener{
 		return selectedSquare;
 	}
 	
+	/**
+	 * Method switches the turn to the other player
+	 */
+	public void switchTurn() {
+		if (turn == Name.white) {
+			turn = Name.black;
+		} else {
+			turn = Name.white;
+		}
+	}
+	
 	public Name getTurn() {
 		return turn;
 	}
@@ -65,6 +76,15 @@ public class Controller implements MouseListener{
 		}
 	}
 	
+	/**
+	 * Executes a move from the selectedSquare to the pressed square
+	 * @param pressedSquare the square to move the piece to
+	 */
+	public void executeMove(Square pressedSquare) {
+		selectedSquare.getPiece().move(board, pressedSquare.getPosition());
+		switchTurn();
+	}
+	
 	@Override
 	public void mousePressed(MouseEvent e) {
 		squarePressed(e);
@@ -73,8 +93,8 @@ public class Controller implements MouseListener{
 	public void squarePressed(MouseEvent e) {
 		Square pressedSquare = board.getSquares()[e.getY() / Display.CHECKER_SIZE][e.getX() / Display.CHECKER_SIZE];
 		if (selectedSquare != null && selectedSquare.getPiece() != null && selectedSquare.getPiece().getValidMoves().contains(pressedSquare)) {
-			selectedSquare.getPiece().move(board, pressedSquare.getPosition());
-		} else {
+			executeMove(pressedSquare);
+		} else if (pressedSquare.getPiece() != null && pressedSquare.getPiece().getOwner().getName() == turn) {
 			setSelectedSquare(pressedSquare);
 		}
 		board.update();

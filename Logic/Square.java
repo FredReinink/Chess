@@ -5,7 +5,7 @@ import Pieces.Piece;
 public class Square {
 	private Coordinate position;
 	private Piece piece = null;
-	private boolean attacked;
+	private Player[] attackedBy = new Player[2];
 	private boolean enPassentAvailable = false;
 
 	public String toString() {
@@ -55,9 +55,9 @@ public class Square {
 	public void removePiece() {
 		piece = null;
 	}
-
-	public void setAggression(boolean b) {
-		attacked = b;
+	
+	public void resetAggression() {
+		attackedBy = new Player[2];
 	}
 
 }
