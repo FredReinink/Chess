@@ -1,12 +1,18 @@
 package Pieces;
 
+import java.io.Serializable;
+
 import Logic.*;
 import Resources.Name;
 
-public class Pawn extends Piece{
+public class Pawn extends Piece implements Serializable {
 
 	public Pawn(Player owner) {
 		super(owner);
+	}
+	
+	public Pawn(Player owner, Coordinate position) {
+		super(owner,position);
 	}
 
 	@Override
@@ -33,30 +39,30 @@ public class Pawn extends Piece{
 		}
 		
 		//if the square immediately in front of the pawn does not contain a piece, it is a valid move
-		Square validCandidate = squares[position.getRow() + moveOffset][position.getColumn()];
-		if (!ChessUtility.containsPiece(validCandidate)) {
-			validMoves.add(validCandidate);
+		Square candidateMove = squares[position.getRow() + moveOffset][position.getColumn()];
+		if (!ChessUtility.containsPiece(candidateMove)) {
+			addValidMove(board, candidateMove, this);
 		}
 		//if the square to the right of the pawn contains an enemy piece, it is a valid move
 		if (position.getColumn() != 7) {
-			validCandidate = squares[position.getRow() + moveOffset][position.getColumn()+1];
-			if (ChessUtility.containsEnemyPiece(validCandidate,this.owner.getName())) {
-				validMoves.add(validCandidate);
+			candidateMove = squares[position.getRow() + moveOffset][position.getColumn()+1];
+			if (ChessUtility.containsEnemyPiece(candidateMove,this.owner.getName())) {
+				addValidMove(board, candidateMove, this);
 			}
 		}
 		//if the square to the left of the pawn contains an enemy piece, it is a valid move
 		if (position.getColumn() != 0) {
-			validCandidate = squares[position.getRow() + moveOffset][position.getColumn()-1];
-			if (ChessUtility.containsEnemyPiece(validCandidate,this.owner.getName())) {
-				validMoves.add(validCandidate);
+			candidateMove = squares[position.getRow() + moveOffset][position.getColumn()-1];
+			if (ChessUtility.containsEnemyPiece(candidateMove,this.owner.getName())) {
+				addValidMove(board, candidateMove, this);
 			}
 		}
 		//if the pawn is on its starting row, it can move two squares ahead, but only if there is not a piece in the way
 		if (position.getRow() == startingRow) {
-			validCandidate = squares[position.getRow() + (moveOffset*2)][position.getColumn()];
+			candidateMove = squares[position.getRow() + (moveOffset*2)][position.getColumn()];
 			Square inTheWay = squares[position.getRow() + moveOffset][position.getColumn()];
-			if ((!ChessUtility.containsPiece(validCandidate)) && (!ChessUtility.containsPiece(inTheWay))) {
-				validMoves.add(validCandidate);
+			if ((!ChessUtility.containsPiece(candidateMove)) && (!ChessUtility.containsPiece(inTheWay))) {
+				addValidMove(board, candidateMove, this);
 			}
 		}
 	}

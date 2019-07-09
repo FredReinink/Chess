@@ -1,5 +1,6 @@
 package Pieces;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import Logic.Board;
@@ -8,10 +9,14 @@ import Logic.Coordinate;
 import Logic.Player;
 import Logic.Square;
 
-public class Knight extends Piece{
+public class Knight extends Piece implements Serializable {
 
 	public Knight(Player owner) {
 		super(owner);
+	}
+	
+	public Knight(Player owner, Coordinate position) {
+		super(owner,position);
 	}
 
 	@Override

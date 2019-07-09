@@ -1,12 +1,14 @@
 package Logic;
 
+import java.io.Serializable;
+
 import Pieces.Piece;
 
-public class Square {
+public class Square implements Serializable {
 	private Coordinate position;
 	private Piece piece = null;
 	private Player[] attackedBy = new Player[2];
-	private boolean enPassentAvailable = false;
+	private boolean enPassent = false;
 
 	public String toString() {
 		if (piece == null) {
@@ -15,8 +17,12 @@ public class Square {
 		return piece.toString();
 	}
 
-	public void setEnPassentAvailable(boolean b) {
-		enPassentAvailable = b;
+	public void setEnPassent(boolean b) {
+		enPassent = b;
+	}
+	
+	public boolean getEnPassent() {
+		return enPassent;
 	}
 
 	public Square(Coordinate c) {
@@ -51,13 +57,45 @@ public class Square {
 			piece.setPosition(position);
 		}
 	}
-
-	public void removePiece() {
-		piece = null;
+	
+	
+	/** Adds the player to the array of players the square is currently under attack by.
+	 * 
+	 * @param player the Player to add
+	 */
+	public void addAttackedBy(Player player) {
+		if (attackedBy[0] == null){
+			attackedBy[0] = player;
+		} else if (attackedBy[1] == null) {
+			attackedBy[1] = player;
+		}
 	}
 	
-	public void resetAggression() {
+	/** Clears the array of players that are currently attacking this square
+	 * 
+	 */
+	public void resetAttackedBy() {
 		attackedBy = new Player[2];
+	}
+	
+	
+	/**
+	 * 
+	 * @param player the friendly player
+	 * @return whether the square is attacked by the other player
+	 */
+	public boolean isAttackedByEnemyOf(Player player) {
+		boolean attackedByEnemy = false;
+		
+		if (attackedBy[0] != player && attackedBy[0] != null) {
+			attackedByEnemy = true;
+		}
+		if (attackedBy[1] != player && attackedBy[1] != null) {
+			attackedByEnemy = true;
+		}
+		
+		return attackedByEnemy;
+		
 	}
 
 }

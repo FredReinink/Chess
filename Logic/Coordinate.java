@@ -1,12 +1,19 @@
 package Logic;
 
-public class Coordinate {
+import java.io.Serializable;
+
+public class Coordinate implements Serializable {
 	private int row;
 	private int column;
 	
 	public Coordinate(int row, int column) {
 		this.row = row;
 		this.column = column;
+	}
+	
+	public Coordinate(Coordinate coordinateToCopy) {
+		this.row = coordinateToCopy.getRow();
+		this.column = coordinateToCopy.getColumn();
 	}
 	
 	public int getRow() {
