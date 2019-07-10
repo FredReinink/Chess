@@ -1,6 +1,7 @@
 package GUI;
-
+import Logic.ChessUtility;
 import java.awt.Color;
+
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -21,19 +22,6 @@ import Resources.Name;
 import Runner.Controller;
 
 public class Display extends JPanel{
-
-	public static final String WHITE_PAWN_PATH = "src/Resources/PieceImages/WhitePawn.png";
-	public static final String BLACK_PAWN_PATH = "src/Resources/PieceImages/BlackPawn.png";
-	public static final String WHITE_BISHOP_PATH = "src/Resources/PieceImages/WhiteBishop.png";
-	public static final String BLACK_BISHOP_PATH = "src/Resources/PieceImages/BlackBishop.png";
-	public static final String BLACK_KING_PATH = "src/Resources/PieceImages/BlackKing.png";
-	public static final String WHITE_KING_PATH = "src/Resources/PieceImages/WhiteKing.png";
-	public static final String BLACK_KNIGHT_PATH = "src/Resources/PieceImages/BlackKnight.png";
-	public static final String WHITE_KNIGHT_PATH = "src/Resources/PieceImages/WhiteKnight.png";
-	public static final String WHITE_QUEEN_PATH = "src/Resources/PieceImages/WhiteQueen.png";
-	public static final String BLACK_QUEEN_PATH = "src/Resources/PieceImages/BlackQueen.png";
-	public static final String BLACK_ROOK_PATH = "src/Resources/PieceImages/BlackRook.png";
-	public static final String WHITE_ROOK_PATH = "src/Resources/PieceImages/WhiteRook.png";
 
 	public static final int CHECKER_SIZE = 80;
 	public static final int FRAME_WIDTH_OFFSET = 6;
@@ -123,57 +111,10 @@ public class Display extends JPanel{
 			for (int j = 0; j < 8; j++) {
 				Piece piece = squares[i][j].getPiece();
 				if (piece != null) {
-					drawPiece(findFile(piece),squares[i][j]);
+					drawPiece(ChessUtility.findFile(piece),squares[i][j]);
 				}
 			}
 		}
-	}
-	
-	/**
-	 * @param piece The piece to find the image file of
-	 * @return returns Image File of the desired piece
-	 */
-	public File findFile(Piece piece) {
-		File pieceFile = null;
-
-		if (piece instanceof Pawn) {
-			if (piece.getOwner().getName() == Name.white) {
-				pieceFile = new File(WHITE_PAWN_PATH);
-			} else {
-				pieceFile = new File(BLACK_PAWN_PATH);
-			}
-		} else if (piece instanceof Bishop) {
-			if (piece.getOwner().getName() == Name.white) {
-				pieceFile = new File(WHITE_BISHOP_PATH);
-			} else {
-				pieceFile = new File(BLACK_BISHOP_PATH);
-			}
-		} else if (piece instanceof Knight) {
-			if (piece.getOwner().getName() == Name.white) {
-				pieceFile = new File(WHITE_KNIGHT_PATH);
-			} else {
-				pieceFile = new File(BLACK_KNIGHT_PATH);
-			}
-		} else if (piece instanceof Rook) {
-			if (piece.getOwner().getName() == Name.white) {
-				pieceFile = new File(WHITE_ROOK_PATH);
-			} else {
-				pieceFile = new File(BLACK_ROOK_PATH);
-			}
-		} else if (piece instanceof King) {
-			if (piece.getOwner().getName() == Name.white) {
-				pieceFile = new File(WHITE_KING_PATH);
-			} else {
-				pieceFile = new File(BLACK_KING_PATH);
-			}
-		} else if (piece instanceof Queen) {
-			if (piece.getOwner().getName() == Name.white) {
-				pieceFile = new File(WHITE_QUEEN_PATH);
-			} else {
-				pieceFile = new File(BLACK_QUEEN_PATH);
-			}
-		}
-		return pieceFile;
 	}
 
 	/**
