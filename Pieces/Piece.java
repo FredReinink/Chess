@@ -91,7 +91,7 @@ public abstract class Piece {
 		for (Square possibleMove : possibleMoves) {
 			move(board, possibleMove.getPosition());
 			
-
+			
 		}
 	}
 

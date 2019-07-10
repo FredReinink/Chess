@@ -9,6 +9,15 @@ public class Coordinate {
 		this.column = column;
 	}
 	
+	public boolean equals(Coordinate coordToCompare) {
+		if (row == coordToCompare.getRow()) {
+			if (column == coordToCompare.getColumn()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public int getRow() {
 		return row;
 	}

@@ -19,10 +19,36 @@ public class Board {
 	
 	public void update() {
 		setPossibleMoves();
+		setCheck();
 	}
 	
+	
+	
 	public void setCheck() {
+		white.setinCheck(false);
+		black.setinCheck(false);
 		
+		Coordinate whiteKingPosition = white.getKing().getPosition();
+		
+		for (Piece piece : black.getPieces()) {
+			for (Square square : piece.getPossibleMoves()) {
+				if (square.getPosition().equals(whiteKingPosition)) {
+					white.setinCheck(true);
+					System.out.println("Setting white check to true");
+				} 
+			}
+		}
+		
+		Coordinate blackKingPosition = black.getKing().getPosition();
+		
+		for (Piece piece : white.getPieces()) {
+			for (Square square : piece.getPossibleMoves()) {
+				if (square.getPosition().equals(blackKingPosition)) {
+					black.setinCheck(true);
+					System.out.println("Setting black check to true");
+				} 
+			}
+		}
 	}
 	
 	public void setPossibleMoves() {

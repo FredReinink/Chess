@@ -7,8 +7,17 @@ import Pieces.*;
 
 public class Player {
 	private King king;
+	private boolean inCheck;
 	private ArrayList<Piece> pieces;
 	private Name name;
+	
+	public void setinCheck(boolean inCheck) {
+		this.inCheck = inCheck;
+	}
+	
+	public boolean isInCheck() {
+		return inCheck;
+	}
 	
 	public void setPossibleMoves(Board board){
 		for (Piece p : pieces) {
@@ -61,11 +70,13 @@ public class Player {
 			pieces.add(new Pawn(this));
 		}
 		
+		king = new King(this);
+		
 		pieces.add(new Rook(this));
 		pieces.add(new Knight(this));
 		pieces.add(new Bishop(this));
 		pieces.add(new Queen(this));
-		pieces.add(new King(this));
+		pieces.add(king);
 		pieces.add(new Bishop(this));
 		pieces.add(new Knight(this));
 		pieces.add(new Rook(this));
