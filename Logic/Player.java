@@ -1,11 +1,12 @@
 package Logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import Resources.Name;
 import Pieces.*;
 
-public class Player {
+public class Player implements Serializable{
 	private King king;
 	private boolean inCheck;
 	private ArrayList<Piece> pieces;

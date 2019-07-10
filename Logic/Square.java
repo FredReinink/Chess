@@ -1,8 +1,10 @@
 package Logic;
 
+import java.io.Serializable;
+
 import Pieces.Piece;
 
-public class Square {
+public class Square implements Serializable{
 	private Coordinate position;
 	private Piece piece = null;
 	private boolean enPassentAvailable = false;

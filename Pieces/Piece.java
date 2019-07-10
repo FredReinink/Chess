@@ -1,11 +1,12 @@
 package Pieces;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import Logic.*;
 import Resources.Name;
 
-public abstract class Piece {
+public abstract class Piece implements Serializable{
 	protected Player owner;
 	protected Coordinate position;
 	protected ArrayList<Square> possibleMoves = new ArrayList<Square>();
@@ -18,6 +19,11 @@ public abstract class Piece {
 	public void move(Board board, Coordinate newPosition) {
 		board.placePiece(null, position);
 		board.placePiece(this, newPosition);
+	}
+	
+	public void move(Board board, Coordinate newPosition, Piece piece) {
+		board.placePiece(null, position);
+		board.placePiece(piece, newPosition);
 	}
 
 	/**
@@ -88,10 +94,22 @@ public abstract class Piece {
 		
 		Coordinate origin = position;
 		
-		for (Square possibleMove : possibleMoves) {
-			move(board, possibleMove.getPosition());
+		ArrayList<Square> possibleMovesCopy = new ArrayList<Square>(possibleMoves);
+		
+		for (Square possibleMove : possibleMovesCopy) {
+			Board boardCopy = (Board) ChessUtility.deepCopy(board);
+			Piece pieceCopy = (Piece) ChessUtility.deepCopy(this);
 			
+			move(boardCopy, possibleMove.getPosition(), pieceCopy);
 			
+			boardCopy.setPossibleMoves();
+			boardCopy.setCheck();
+			if (this.owner.getName() == Name.white && !boardCopy.getWhite().isInCheck()) {
+				validMoves.add(possibleMove);
+			}
+			if (this.owner.getName() == Name.black && !boardCopy.getBlack().isInCheck()) {
+				validMoves.add(possibleMove);
+			}
 		}
 	}
 

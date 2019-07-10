@@ -1,14 +1,23 @@
 package Logic;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import Pieces.*;
 import Resources.Name;
 
-public class Board {
+public class Board implements Serializable{
 	private Square[][] board;
 	private Player white;
 	private Player black;
+	
+	public Player getWhite() {
+		return white;
+	}
+	
+	public Player getBlack() {
+		return black;
+	}
 	
 	/**
 	 * @return returns the 2d array of squares that make up this board.
@@ -17,13 +26,23 @@ public class Board {
 		return board;
 	}
 	
+	/**
+	 * Updates the board state.
+	 */
 	public void update() {
+		setPossibleMoves();
+		setCheck();
+		setValidMoves();
+	}
+	
+	public void testBoardUpdate() {
 		setPossibleMoves();
 		setCheck();
 	}
 	
-	
-	
+	/**
+	 * Determines whether either player is currently in check and sets the inCheck instance variable in Player accordingly.
+	 */
 	public void setCheck() {
 		white.setinCheck(false);
 		black.setinCheck(false);
@@ -51,11 +70,19 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * Sets all possible moves for both players.
+	 * A possible move is a move that a piece can make purely based on a piece's rules for movement (includes potentially illegal moves where a move places the owner in check).
+	 */
 	public void setPossibleMoves() {
 		white.setPossibleMoves(this);
 		black.setPossibleMoves(this);
 	}
 	
+	/**
+	 * Sets all valid moves for both players. This function trims possible moves that are illegal and so this function should only be called after setPossibleMoves().
+	 * A valid move is a move that a player is legally allowed to make.
+	 */
 	public void setValidMoves() {
 		white.setValidMoves(this);
 		black.setValidMoves(this);

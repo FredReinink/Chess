@@ -7,7 +7,7 @@ import Logic.Coordinate;
 import Logic.Player;
 import Logic.Square;
 
-public class Queen extends Piece{
+public class Queen extends Piece {
 
 	public Queen(Player owner) {
 		super(owner);
