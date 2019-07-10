@@ -20,11 +20,6 @@ public abstract class Piece implements Serializable{
 		board.placePiece(null, position);
 		board.placePiece(this, newPosition);
 	}
-	
-	public void move(Board board, Coordinate newPosition, Piece piece) {
-		board.placePiece(null, position);
-		board.placePiece(piece, newPosition);
-	}
 
 	/**
 	 * Helper method for pieces that use vectors to determine possible moves.
@@ -69,6 +64,10 @@ public abstract class Piece implements Serializable{
 		return possibleMoves;
 	}
 	
+	public ArrayList<Square> getValidMoves() {
+		return validMoves;
+	}
+	
 	public Coordinate getPosition() {
 		return position;
 	}
@@ -92,22 +91,25 @@ public abstract class Piece implements Serializable{
 	public void setValidMoves(Board board) {
 		resetValidMoves();
 		
-		Coordinate origin = position;
-		
 		ArrayList<Square> possibleMovesCopy = new ArrayList<Square>(possibleMoves);
 		
+		System.out.println("\n-----------------------------------------");
+		System.out.println("For " + this + " At " + this.getPosition().getRow() + " " + this.getPosition().getColumn());
 		for (Square possibleMove : possibleMovesCopy) {
+			System.out.println("Checking move: " + possibleMove.getPosition().getRow() + " " + possibleMove.getPosition().getColumn());
 			Board boardCopy = (Board) ChessUtility.deepCopy(board);
-			Piece pieceCopy = (Piece) ChessUtility.deepCopy(this);
 			
-			move(boardCopy, possibleMove.getPosition(), pieceCopy);
+			//gets the piece on the copied board that corresponds to this piece
+			Piece copiedPiece = boardCopy.getSquares()[position.getRow()][position.getColumn()].getPiece();
+			
+			copiedPiece.move(boardCopy, possibleMove.getPosition());
 			
 			boardCopy.setPossibleMoves();
 			boardCopy.setCheck();
-			if (this.owner.getName() == Name.white && !boardCopy.getWhite().isInCheck()) {
+			if ((this.owner.getName() == Name.white) && (!boardCopy.getWhite().isInCheck())) {
 				validMoves.add(possibleMove);
 			}
-			if (this.owner.getName() == Name.black && !boardCopy.getBlack().isInCheck()) {
+			if ((this.owner.getName() == Name.black) && (!boardCopy.getBlack().isInCheck())) {
 				validMoves.add(possibleMove);
 			}
 		}
@@ -119,4 +121,6 @@ public abstract class Piece implements Serializable{
 	 * @param board the instance of the board the piece is on
 	 */
 	public abstract void setPossibleMoves(Board board);
+
+
 }
