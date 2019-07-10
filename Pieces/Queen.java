@@ -16,6 +16,8 @@ public class Queen extends Piece {
 	@Override
 	public void setPossibleMoves(Board board){
 		resetPossibleMoves();
+		resetAggressiveMoves();
+		
 		Bishop bishop = new Bishop(this.owner);
 		bishop.setPosition(this.position);
 		
@@ -27,6 +29,8 @@ public class Queen extends Piece {
 		
 		possibleMoves.addAll(rook.getPossibleMoves());
 		possibleMoves.addAll(bishop.getPossibleMoves());
+		
+		aggressiveMoves.addAll(possibleMoves);
 	}
 
 }

@@ -17,6 +17,8 @@ public class King extends Piece {
 	@Override
 	public void setPossibleMoves(Board board){		
 		resetPossibleMoves();
+		resetAggressiveMoves();
+		
 		Square[][] squares = board.getSquares();
 		
 		int currentRow = this.position.getRow();
@@ -35,6 +37,8 @@ public class King extends Piece {
 			c = new Coordinate(currentRow + i, currentColumn - i);
 			pointMoveHelper(board,c);
 		}
+		
+		aggressiveMoves.addAll(possibleMoves);
 	}
 
 }

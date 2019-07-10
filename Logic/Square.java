@@ -47,13 +47,13 @@ public class Square implements Serializable{
 	}
 
 	public void setPiece(Piece piece) {
-		this.piece = piece;
 		if (piece != null) {
 			piece.setPosition(position);
+			
+			if (this.piece != null) {
+				this.piece.setDead(true);
+			}
 		}
-	}
-
-	public void removePiece() {
-		piece = null;
+		this.piece = piece;
 	}
 }

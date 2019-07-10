@@ -12,6 +12,8 @@ public class Pawn extends Piece{
 	@Override
 	public void setPossibleMoves(Board board) {
 		resetPossibleMoves();
+		resetAggressiveMoves();
+		
 		Square[][] squares = board.getSquares();
 		
 		int startingRow;
@@ -37,18 +39,20 @@ public class Pawn extends Piece{
 		if (!ChessUtility.containsPiece(candidateMove)) {
 			possibleMoves.add(candidateMove);
 		}
-		//if the square to the right of the pawn contains an enemy piece, it is a valid move
+		//if the square in front and to the right of the pawn contains an enemy piece, it is a valid move
 		if (position.getColumn() != 7) {
 			candidateMove = squares[position.getRow() + moveOffset][position.getColumn()+1];
 			if (ChessUtility.containsEnemyPiece(candidateMove,this.owner.getName())) {
 				possibleMoves.add(candidateMove);
+				aggressiveMoves.add(candidateMove);
 			}
 		}
-		//if the square to the left of the pawn contains an enemy piece, it is a valid move
+		//if the square in front and to the left of the pawn contains an enemy piece, it is a valid move
 		if (position.getColumn() != 0) {
 			candidateMove = squares[position.getRow() + moveOffset][position.getColumn()-1];
 			if (ChessUtility.containsEnemyPiece(candidateMove,this.owner.getName())) {
 				possibleMoves.add(candidateMove);
+				aggressiveMoves.add(candidateMove);
 			}
 		}
 		//if the pawn is on its starting row, it can move two squares ahead, but only if there is not a piece in the way

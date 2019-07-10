@@ -50,7 +50,7 @@ public class Board implements Serializable{
 		Coordinate whiteKingPosition = white.getKing().getPosition();
 		
 		for (Piece piece : black.getPieces()) {
-			for (Square square : piece.getPossibleMoves()) {
+			for (Square square : piece.getAggressiveMoves()) {
 				if (square.getPosition().equals(whiteKingPosition)) {
 					white.setinCheck(true);
 					System.out.println("Setting white check to true");
@@ -61,7 +61,7 @@ public class Board implements Serializable{
 		Coordinate blackKingPosition = black.getKing().getPosition();
 		
 		for (Piece piece : white.getPieces()) {
-			for (Square square : piece.getPossibleMoves()) {
+			for (Square square : piece.getAggressiveMoves()) {
 				if (square.getPosition().equals(blackKingPosition)) {
 					black.setinCheck(true);
 					System.out.println("Setting black check to true");

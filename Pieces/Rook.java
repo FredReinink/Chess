@@ -17,6 +17,8 @@ public class Rook extends Piece{
 	@Override
 	public void setPossibleMoves(Board board){
 		resetPossibleMoves();
+		resetAggressiveMoves();
+		
 		Square[][] squares = board.getSquares();
 		
 		boolean blocked = false;
@@ -46,6 +48,8 @@ public class Rook extends Piece{
 			blocked = vectorMoveHelper(squares[position.getRow()][column]);
 			column++;
 		}
+		
+		aggressiveMoves.addAll(possibleMoves);
 	}
 
 }

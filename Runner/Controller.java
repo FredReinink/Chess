@@ -92,7 +92,7 @@ public class Controller implements MouseListener{
 	
 	public void squarePressed(MouseEvent e) {
 		Square pressedSquare = board.getSquares()[e.getY() / Display.CHECKER_SIZE][e.getX() / Display.CHECKER_SIZE];
-		if (selectedSquare != null && selectedSquare.getPiece() != null && selectedSquare.getPiece().getPossibleMoves().contains(pressedSquare)) {
+		if (selectedSquare != null && selectedSquare.getPiece() != null && selectedSquare.getPiece().getValidMoves().contains(pressedSquare)) {
 			executeMove(pressedSquare);
 		} else if (pressedSquare.getPiece() != null && pressedSquare.getPiece().getOwner().getName() == turn) {
 			setSelectedSquare(pressedSquare);

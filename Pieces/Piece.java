@@ -7,10 +7,12 @@ import Logic.*;
 import Resources.Name;
 
 public abstract class Piece implements Serializable{
+	private boolean dead = false;
 	protected Player owner;
 	protected Coordinate position;
 	protected ArrayList<Square> possibleMoves = new ArrayList<Square>();
 	protected ArrayList<Square> validMoves = new ArrayList<Square>();
+	protected ArrayList<Square> aggressiveMoves = new ArrayList<Square>();
 	
 	public Piece(Player owner) {
 		this.owner = owner;
@@ -19,6 +21,23 @@ public abstract class Piece implements Serializable{
 	public void move(Board board, Coordinate newPosition) {
 		board.placePiece(null, position);
 		board.placePiece(this, newPosition);
+	}
+	
+	/**
+	 * @return whether the piece is dead or not
+	 */
+	public boolean isDead() {
+		return dead;
+	}
+
+	/**
+	 * @param dead whether the piece is dead or not
+	 */
+	public void setDead(boolean dead) {
+		resetPossibleMoves();
+		resetValidMoves();
+		resetAggressiveMoves();
+		this.dead = dead;
 	}
 
 	/**
@@ -68,6 +87,10 @@ public abstract class Piece implements Serializable{
 		return validMoves;
 	}
 	
+	public ArrayList<Square> getAggressiveMoves() {
+		return aggressiveMoves;
+	}
+	
 	public Coordinate getPosition() {
 		return position;
 	}
@@ -88,6 +111,10 @@ public abstract class Piece implements Serializable{
 		possibleMoves.removeAll(possibleMoves);
 	}
 	
+	public void resetAggressiveMoves() {
+		aggressiveMoves.removeAll(aggressiveMoves);
+	}
+	
 	public void setValidMoves(Board board) {
 		resetValidMoves();
 		
@@ -101,8 +128,11 @@ public abstract class Piece implements Serializable{
 			
 			//gets the piece on the copied board that corresponds to this piece
 			Piece copiedPiece = boardCopy.getSquares()[position.getRow()][position.getColumn()].getPiece();
+			System.out.println(copiedPiece);
 			
-			copiedPiece.move(boardCopy, possibleMove.getPosition());
+			if (copiedPiece != null) {
+				copiedPiece.move(boardCopy, possibleMove.getPosition());
+			}
 			
 			boardCopy.setPossibleMoves();
 			boardCopy.setCheck();

@@ -17,6 +17,8 @@ public class Knight extends Piece{
 	@Override
 	public void setPossibleMoves(Board board){
 		resetPossibleMoves();
+		resetAggressiveMoves();
+		
 		int currentRow = this.position.getRow();
 		int currentColumn = this.position.getColumn();
 		
@@ -29,6 +31,8 @@ public class Knight extends Piece{
 				pointMoveHelper(board,c);
 			}
 		}
+		
+		aggressiveMoves.addAll(possibleMoves);
 	}
 
 }

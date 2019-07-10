@@ -11,6 +11,8 @@ public class Bishop extends Piece{
 	@Override
 	public void setPossibleMoves(Board board){
 		resetPossibleMoves();
+		resetAggressiveMoves();
+		
 		Square[][] squares = board.getSquares();
 		
 		//up left
@@ -52,6 +54,8 @@ public class Bishop extends Piece{
 			row++;
 			column++;
 		}
+		
+		aggressiveMoves.addAll(possibleMoves);
 	}
 
 }

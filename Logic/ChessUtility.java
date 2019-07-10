@@ -19,26 +19,6 @@ public class ChessUtility {
 	public static final String BLACK_ROOK_PATH = "src/Resources/PieceImages/BlackRook.png";
 	public static final String WHITE_ROOK_PATH = "src/Resources/PieceImages/WhiteRook.png";
 	
-	public static Object deepCopy(Object objectToCopy) {
-		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ObjectOutputStream oos = new ObjectOutputStream(baos);
-			oos.writeObject(objectToCopy);
-
-			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-			ObjectInputStream ois = new ObjectInputStream(bais);
-			return ois.readObject();
-		} catch (IOException e) {
-			System.out.println("Board Copying error: IO");
-			e.printStackTrace();
-			return null;
-		} catch (ClassNotFoundException e) {
-			System.out.println("Board Copying error: ClassNotFound");
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
 	/**
 	 * @param piece The piece to find the image file of
 	 * @return returns Image File of the desired piece
@@ -120,5 +100,29 @@ public class ChessUtility {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * @param objectToCopy
+	 * @return Returns a deep copy of @param
+	 */
+	public static Object deepCopy(Object objectToCopy) {
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(objectToCopy);
+
+			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+			ObjectInputStream ois = new ObjectInputStream(bais);
+			return ois.readObject();
+		} catch (IOException e) {
+			System.out.println("Board Copying error: IO");
+			e.printStackTrace();
+			return null;
+		} catch (ClassNotFoundException e) {
+			System.out.println("Board Copying error: ClassNotFound");
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

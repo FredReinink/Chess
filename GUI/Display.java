@@ -92,7 +92,7 @@ public class Display extends JPanel{
 			System.out.println("this piece has " + possibleMoves.size() + " possible moves");
 			System.out.println("this piece has " + validMoves.size() + " valid moves");
 			
-			for (Square s : possibleMoves) {
+			for (Square s : validMoves) {
 				g.setColor(Color.YELLOW);
 				g.drawRect(s.getColumn()*CHECKER_SIZE, s.getRow()*CHECKER_SIZE, CHECKER_SIZE, CHECKER_SIZE);
 				//make rectangle thicker

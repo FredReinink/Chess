@@ -16,19 +16,27 @@ public class Player implements Serializable{
 		this.inCheck = inCheck;
 	}
 	
+	public void removePiece(Piece pieceToRemove) {
+		pieces.remove(pieceToRemove);
+	}
+	
 	public boolean isInCheck() {
 		return inCheck;
 	}
 	
 	public void setPossibleMoves(Board board){
 		for (Piece p : pieces) {
-			p.setPossibleMoves(board);
+			if (!p.isDead()) {
+				p.setPossibleMoves(board);
+			}
 		}
 	}
 	
 	public void setValidMoves(Board board) {
 		for (Piece p : pieces) {
-			p.setValidMoves(board);
+			if (!p.isDead()) {
+				p.setValidMoves(board);
+			}
 		}
 	}
 	
