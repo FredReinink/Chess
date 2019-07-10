@@ -1,38 +1,36 @@
 package Pieces;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 
 import Logic.Board;
 import Logic.Coordinate;
 import Logic.Player;
+import Logic.Square;
 
-public class Queen extends Piece implements Serializable {
+public class Queen extends Piece {
 
 	public Queen(Player owner) {
 		super(owner);
 	}
-	
-	public Queen(Player owner, Coordinate position) {
-		super(owner,position);
-	}
 
 	@Override
-	public void setValidMoves(Board board){
-		resetMoves();
+	public void setPossibleMoves(Board board){
+		resetPossibleMoves();
+		resetAggressiveMoves();
 		
-		//Since the Queen's valid moves consist of all the moves a Rook and a Bishop can do, can simply treat a Queen as a Rook and 
-		//Bishop for the purposes of determining valid moves
 		Bishop bishop = new Bishop(this.owner);
 		bishop.setPosition(this.position);
 		
 		Rook rook = new Rook(this.owner);
 		rook.setPosition(this.position);
 		
-		rook.setValidMoves(board);
-		bishop.setValidMoves(board);
+		rook.setPossibleMoves(board);
+		bishop.setPossibleMoves(board);
 		
-		validMoves.addAll(rook.getValidMoves());
-		validMoves.addAll(bishop.getValidMoves());
+		possibleMoves.addAll(rook.getPossibleMoves());
+		possibleMoves.addAll(bishop.getPossibleMoves());
+		
+		aggressiveMoves.addAll(possibleMoves);
 	}
 
 }

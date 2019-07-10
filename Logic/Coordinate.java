@@ -2,7 +2,7 @@ package Logic;
 
 import java.io.Serializable;
 
-public class Coordinate implements Serializable {
+public class Coordinate implements Serializable{
 	private int row;
 	private int column;
 	
@@ -11,9 +11,13 @@ public class Coordinate implements Serializable {
 		this.column = column;
 	}
 	
-	public Coordinate(Coordinate coordinateToCopy) {
-		this.row = coordinateToCopy.getRow();
-		this.column = coordinateToCopy.getColumn();
+	public boolean equals(Coordinate coordToCompare) {
+		if (row == coordToCompare.getRow()) {
+			if (column == coordToCompare.getColumn()) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public int getRow() {

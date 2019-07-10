@@ -1,6 +1,8 @@
 package GUI;
+import Logic.ChessUtility;
 
 import java.awt.Color;
+
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -13,10 +15,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import Logic.Board;
-import Logic.ChessUtility;
 import Logic.Square;
 import Pieces.*;
-import Resources.Name;
 import Runner.Controller;
 
 public class Display extends JPanel{
@@ -40,7 +40,7 @@ public class Display extends JPanel{
 		this.board = board;
 	}
 
-	public Display(Controller c){
+	public Display (Controller c){
 		controller = c;
 		addMouseListener(controller);
 		JFrame frame = new JFrame();
@@ -58,8 +58,8 @@ public class Display extends JPanel{
 
 		g.setColor(WHITE_SQUARE_COLOUR);
 		g.fillRect(0, 0, CHECKER_SIZE * 8, CHECKER_SIZE * 8);
+
 		g.setColor(BLACK_SQUARE_COLOUR);
-		
 		//Paints the checkers. Checkers are black when the row index is even and the column index is odd or the row index is odd and the column index is even
 		//i == rows j == columns
 		for (int i = 0; i < 8; i++) {
@@ -78,10 +78,13 @@ public class Display extends JPanel{
 		Square selectedSquare = controller.getSelectedSquare();
 		
 		try {
+			System.out.println("====================================================================\n");
 			System.out.println("the selected piece is " + selectedSquare.getPiece() + " at position Row: " + selectedSquare.getRow() + " Column: " + selectedSquare.getColumn());
+			ArrayList<Square> possibleMoves = selectedSquare.getPiece().getPossibleMoves();
 			ArrayList<Square> validMoves = selectedSquare.getPiece().getValidMoves();
 			
 			
+			System.out.println("this piece has " + possibleMoves.size() + " possible moves");
 			System.out.println("this piece has " + validMoves.size() + " valid moves");
 			
 			for (Square s : validMoves) {
@@ -111,8 +114,6 @@ public class Display extends JPanel{
 			}
 		}
 	}
-	
-
 
 	/**
 	 * Draws the image contained by the file on the specified square

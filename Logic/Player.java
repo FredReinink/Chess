@@ -6,19 +6,50 @@ import java.util.ArrayList;
 import Resources.Name;
 import Pieces.*;
 
-public class Player implements Serializable {
+public class Player implements Serializable{
+	private King king;
+	private boolean inCheck;
 	private ArrayList<Piece> pieces;
 	private Name name;
-	private boolean check;
 	
-	public boolean isCheck() {
-		return check;
+	public void setinCheck(boolean inCheck) {
+		this.inCheck = inCheck;
 	}
-
-	public void setCheck(boolean check) {
-		this.check = check;
+	
+	public boolean isInCheck() {
+		return inCheck;
 	}
-
+	
+	/**
+	 * Sets possible moves for all alive pieces belonging to this player.
+	 * 
+	 * @param board
+	 */
+	public void setPossibleMoves(Board board){
+		for (Piece p : pieces) {
+			if (!p.isDead()) {
+				p.setPossibleMoves(board);
+			}
+		}
+	}
+	
+	/**
+	 * Sets valid moves for all alive pieces belonging to this player.
+	 * 
+	 * @param board
+	 */
+	public void setValidMoves(Board board) {
+		for (Piece p : pieces) {
+			if (!p.isDead()) {
+				p.setValidMoves(board);
+			}
+		}
+	}
+	
+	public King getKing() {
+		return king;
+	}
+	
 	/**
 	 * @return player's pieces list
 	 */
@@ -38,13 +69,13 @@ public class Player implements Serializable {
 	}
 	
 	/**
-	 * Initializes the player and creates a player's initial pieces.
-	 * Pieces are stored in this order: [pawn, pawn, pawn, pawn, pawn, pawn, pawn, pawn, rook, knight, bishop, queen, king, bishop, knight, rook]
+	 * Sole Constructor.
+	 * Initializes the players name, and creates a player's initial pieces.
+	 * Pieces are created according to this encoding: [pawn, pawn, pawn, pawn, pawn, pawn, pawn, pawn, rook, knight, bishop, queen, king, bishop, knight, rook]
 	 * 
 	 * @param name the name of the player to create
 	 */
 	public Player(Name name) {
-		check = false;
 		this.name = name;
 
 		pieces = new ArrayList<Piece>();
@@ -54,45 +85,15 @@ public class Player implements Serializable {
 			pieces.add(new Pawn(this));
 		}
 		
+		king = new King(this);
+		
 		pieces.add(new Rook(this));
 		pieces.add(new Knight(this));
 		pieces.add(new Bishop(this));
 		pieces.add(new Queen(this));
-		pieces.add(new King(this));
+		pieces.add(king);
 		pieces.add(new Bishop(this));
 		pieces.add(new Knight(this));
 		pieces.add(new Rook(this));
-	}
-	
-	/**
-	 * Copy constructor
-	 * 
-	 * @param playerToCopy
-	 */
-	public Player(Player playerToCopy) {
-		check = false;
-		this.name = playerToCopy.getName();
-		pieces = new ArrayList<Piece>();
-		
-		for (Piece piece : pieces) {
-			if (piece instanceof King) {
-				pieces.add(new King(this,piece.getPosition()));
-			}
-			if (piece instanceof Knight) {
-				pieces.add(new Knight(this,piece.getPosition()));
-			}
-			if (piece instanceof Pawn) {
-				pieces.add(new Pawn(this,piece.getPosition()));
-			}
-			if (piece instanceof Queen) {
-				pieces.add(new Queen(this,piece.getPosition()));
-			}
-			if (piece instanceof Rook) {
-				pieces.add(new Rook(this,piece.getPosition()));
-			}
-			if (piece instanceof Bishop) {
-				pieces.add(new Bishop(this,piece.getPosition()));
-			}
-		}
 	}
 }

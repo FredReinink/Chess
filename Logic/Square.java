@@ -4,11 +4,10 @@ import java.io.Serializable;
 
 import Pieces.Piece;
 
-public class Square implements Serializable {
+public class Square implements Serializable{
 	private Coordinate position;
 	private Piece piece = null;
-	private Player[] attackedBy = new Player[2];
-	private boolean enPassent = false;
+	private boolean enPassentAvailable = false;
 
 	public String toString() {
 		if (piece == null) {
@@ -17,12 +16,8 @@ public class Square implements Serializable {
 		return piece.toString();
 	}
 
-	public void setEnPassent(boolean b) {
-		enPassent = b;
-	}
-	
-	public boolean getEnPassent() {
-		return enPassent;
+	public void setEnPassentAvailable(boolean b) {
+		enPassentAvailable = b;
 	}
 
 	public Square(Coordinate c) {
@@ -51,51 +46,19 @@ public class Square implements Serializable {
 		piece.setPosition(c);
 	}
 
+	/**
+	 * Sets a piece on this square. If this square is currently occupied by another piece, sets that piece to be dead.
+	 * 
+	 * @param piece the piece to set
+	 */
 	public void setPiece(Piece piece) {
-		this.piece = piece;
 		if (piece != null) {
 			piece.setPosition(position);
+			
+			if (this.piece != null) {
+				this.piece.setDead(true);
+			}
 		}
+		this.piece = piece;
 	}
-	
-	
-	/** Adds the player to the array of players the square is currently under attack by.
-	 * 
-	 * @param player the Player to add
-	 */
-	public void addAttackedBy(Player player) {
-		if (attackedBy[0] == null){
-			attackedBy[0] = player;
-		} else if (attackedBy[1] == null) {
-			attackedBy[1] = player;
-		}
-	}
-	
-	/** Clears the array of players that are currently attacking this square
-	 * 
-	 */
-	public void resetAttackedBy() {
-		attackedBy = new Player[2];
-	}
-	
-	
-	/**
-	 * 
-	 * @param player the friendly player
-	 * @return whether the square is attacked by the other player
-	 */
-	public boolean isAttackedByEnemyOf(Player player) {
-		boolean attackedByEnemy = false;
-		
-		if (attackedBy[0] != player && attackedBy[0] != null) {
-			attackedByEnemy = true;
-		}
-		if (attackedBy[1] != player && attackedBy[1] != null) {
-			attackedByEnemy = true;
-		}
-		
-		return attackedByEnemy;
-		
-	}
-
 }

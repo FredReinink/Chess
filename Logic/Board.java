@@ -1,47 +1,15 @@
 package Logic;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import Pieces.*;
 import Resources.Name;
 
-public class Board implements Serializable {
+public class Board implements Serializable{
 	private Square[][] board;
 	private Player white;
 	private Player black;
-	
-	public Board deepCopy(Board boardToCopy) {
-		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ObjectOutputStream oos = new ObjectOutputStream(baos);
-			oos.writeObject(boardToCopy);
-
-			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-			ObjectInputStream ois = new ObjectInputStream(bais);
-			return (Board) ois.readObject();
-		} catch (IOException e) {
-			System.out.println("Board Copying error: IO");
-			e.printStackTrace();
-			return null;
-		} catch (ClassNotFoundException e) {
-			System.out.println("Board Copying error: ClassNotFound");
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	/**
-	 * @return returns the 2d array of squares that make up this board.
-	 */
-	public Square[][] getSquares() {
-		return board;
-	}
 	
 	public Player getWhite() {
 		return white;
@@ -52,53 +20,75 @@ public class Board implements Serializable {
 	}
 	
 	/**
-	 * Updates the board with new piece and player states
+	 * @return returns the 2d array of squares that make up this board.
+	 */
+	public Square[][] getSquares() {
+		return board;
+	}
+	
+	/**
+	 * Updates the board state.
 	 */
 	public void update() {
-		setValidMoves();
-		setAggression();
+		setPossibleMoves();
+		setCheck();
 		setValidMoves();
 	}
 	
 	/**
-	 * Sets all valid moves for all pieces on the board.
+	 * Updates the board state without setting valid moves. Use this method on a copied test board to determine if a move places the owner in check.
+	 */
+	public void testBoardUpdate() {
+		setPossibleMoves();
+		setCheck();
+	}
+	
+	/**
+	 * Determines whether either player is currently in check and sets the inCheck instance variable in Player accordingly.
+	 */
+	public void setCheck() {
+		white.setinCheck(false);
+		black.setinCheck(false);
+		
+		Coordinate whiteKingPosition = white.getKing().getPosition();
+		
+		for (Piece piece : black.getPieces()) {
+			for (Square square : piece.getAggressiveMoves()) {
+				if (square.getPosition().equals(whiteKingPosition)) {
+					white.setinCheck(true);
+					System.out.println("Setting white check to true");
+				} 
+			}
+		}
+		
+		Coordinate blackKingPosition = black.getKing().getPosition();
+		
+		for (Piece piece : white.getPieces()) {
+			for (Square square : piece.getAggressiveMoves()) {
+				if (square.getPosition().equals(blackKingPosition)) {
+					black.setinCheck(true);
+					System.out.println("Setting black check to true");
+				} 
+			}
+		}
+	}
+	
+	/**
+	 * Sets all possible moves for both players.
+	 * A possible move is a move that a piece can make purely based on a piece's rules for movement (includes potentially illegal moves where a move places the owner in check).
+	 */
+	public void setPossibleMoves() {
+		white.setPossibleMoves(this);
+		black.setPossibleMoves(this);
+	}
+	
+	/**
+	 * Sets all valid moves for both players. This function trims possible moves that are illegal and so this function should only be called after setPossibleMoves().
+	 * A valid move is a move that a player is legally allowed to make.
 	 */
 	public void setValidMoves() {
-		for (Piece p : white.getPieces()) {
-			p.setValidMoves(this);
-		}
-		for (Piece p : black.getPieces()) {
-			p.setValidMoves(this);
-		}
-	}
-	
-	/**
-	 * Sets the squares to be under attack by the opposing players' valid moves.
-	 */
-	public void setAggression() {		
-		clearAggression();
-		
-		for (Piece p : white.getPieces()) {
-			for (Square s : p.getValidMoves()) {
-				s.addAttackedBy(white);
-			}
-		}
-		for (Piece p : black.getPieces()) {
-			for (Square s : p.getValidMoves()) {
-				s.addAttackedBy(black);
-			}
-		}
-	}
-	
-	/**
-	 * Sets all squares to be not under attack.
-	 */
-	public void clearAggression() {
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				board[i][j].resetAttackedBy();
-			}
-		}
+		white.setValidMoves(this);
+		black.setValidMoves(this);
 	}
 	
 	public String toString() {
@@ -112,12 +102,13 @@ public class Board implements Serializable {
 				result += " " + board[i][j].toString();
 			}
 			result += "\n";	
-		}
+			}
 		
 		return result;
 	}
 	
 	/**
+	 * Sole constructor.
 	 * Builds a board out of squares. Each square is initialized with x and y coordinates.
 	 * 
 	 * @param white the player with Name white
@@ -170,7 +161,8 @@ public class Board implements Serializable {
 	 * Places one piece on the square with the designated coordinates
 	 * 
 	 * @param p the piece to be placed
-	 * @param poisition the position of the square to place the piece
+	 * @param row the row of the square to place the piece
+	 * @param column the column coordinate of the square to place the piece
 	 */
 	public void placePiece(Piece p, Coordinate position) {
 		board[position.getRow()][position.getColumn()].setPiece(p);

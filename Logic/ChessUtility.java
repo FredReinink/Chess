@@ -1,14 +1,8 @@
 package Logic;
 
-import java.io.File;
+import java.io.*;
 
-import Pieces.Bishop;
-import Pieces.King;
-import Pieces.Knight;
-import Pieces.Pawn;
-import Pieces.Piece;
-import Pieces.Queen;
-import Pieces.Rook;
+import Pieces.*;
 import Resources.Name;
 
 public class ChessUtility {
@@ -24,42 +18,6 @@ public class ChessUtility {
 	public static final String BLACK_QUEEN_PATH = "src/Resources/PieceImages/BlackQueen.png";
 	public static final String BLACK_ROOK_PATH = "src/Resources/PieceImages/BlackRook.png";
 	public static final String WHITE_ROOK_PATH = "src/Resources/PieceImages/WhiteRook.png";
-
-	/**
-	 * Determines if there is a piece on the square
-	 * @param square the square to check
-	 * @return true if there is a piece, false otherwise
-	 */
-	public static boolean containsPiece(Square square) {
-		if (square.getPiece() != null) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Determines if there is an enemy piece on the square
-	 * @param square the square to check
-	 * @return true if there is an enemy piece, false otherwise
-	 */
-	public static boolean containsEnemyPiece(Square square, Name name) {
-		if ((square.getPiece() != null) && (!(square.getPiece().getOwner().getName() == name))) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Determines if there is a friendly piece on the square
-	 * @param square the square to check
-	 * @return true if there is a friendly piece, false otherwise
-	 */
-	public static boolean containsFriendlyPiece(Square square, Name name) {
-		if ((square.getPiece() != null) && (square.getPiece().getOwner().getName() == name)) {
-			return true;
-		}
-		return false;
-	}
 	
 	/**
 	 * @param piece The piece to find the image file of
@@ -106,5 +64,65 @@ public class ChessUtility {
 			}
 		}
 		return pieceFile;
+	}
+
+	/**
+	 * Determines if there is a piece on the square
+	 * @param square the square to check
+	 * @return true if there is a piece, false otherwise
+	 */
+	public static boolean containsPiece(Square square) {
+		if (square.getPiece() != null) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Determines if there is an enemy piece on the square
+	 * @param square the square to check
+	 * @return true if there is an enemy piece, false otherwise
+	 */
+	public static boolean containsEnemyPiece(Square square, Name name) {
+		if ((square.getPiece() != null) && (!(square.getPiece().getOwner().getName() == name))) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Determines if there is a friendly piece on the square
+	 * @param square the square to check
+	 * @return true if there is a friendly piece, false otherwise
+	 */
+	public static boolean containsFriendlyPiece(Square square, Name name) {
+		if ((square.getPiece() != null) && (square.getPiece().getOwner().getName() == name)) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @param objectToCopy
+	 * @return Returns a deep copy of @param
+	 */
+	public static Object deepCopy(Object objectToCopy) {
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(objectToCopy);
+
+			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+			ObjectInputStream ois = new ObjectInputStream(bais);
+			return ois.readObject();
+		} catch (IOException e) {
+			System.out.println("Board Copying error: IO");
+			e.printStackTrace();
+			return null;
+		} catch (ClassNotFoundException e) {
+			System.out.println("Board Copying error: ClassNotFound");
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

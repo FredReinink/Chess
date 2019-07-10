@@ -1,6 +1,5 @@
 package Pieces;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import Logic.Board;
@@ -9,19 +8,17 @@ import Logic.Coordinate;
 import Logic.Player;
 import Logic.Square;
 
-public class Knight extends Piece implements Serializable {
+public class Knight extends Piece{
 
 	public Knight(Player owner) {
 		super(owner);
 	}
-	
-	public Knight(Player owner, Coordinate position) {
-		super(owner,position);
-	}
 
 	@Override
-	public void setValidMoves(Board board){
-		resetMoves();
+	public void setPossibleMoves(Board board){
+		resetPossibleMoves();
+		resetAggressiveMoves();
+		
 		int currentRow = this.position.getRow();
 		int currentColumn = this.position.getColumn();
 		
@@ -34,6 +31,8 @@ public class Knight extends Piece implements Serializable {
 				pointMoveHelper(board,c);
 			}
 		}
+		
+		aggressiveMoves.addAll(possibleMoves);
 	}
 
 }
