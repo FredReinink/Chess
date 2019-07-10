@@ -35,6 +35,9 @@ public class Board implements Serializable{
 		setValidMoves();
 	}
 	
+	/**
+	 * Updates the board state without setting valid moves. Use this method on a copied test board to determine if a move places the owner in check.
+	 */
 	public void testBoardUpdate() {
 		setPossibleMoves();
 		setCheck();

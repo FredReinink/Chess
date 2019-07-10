@@ -16,14 +16,15 @@ public class Player implements Serializable{
 		this.inCheck = inCheck;
 	}
 	
-	public void removePiece(Piece pieceToRemove) {
-		pieces.remove(pieceToRemove);
-	}
-	
 	public boolean isInCheck() {
 		return inCheck;
 	}
 	
+	/**
+	 * Sets possible moves for all alive pieces belonging to this player.
+	 * 
+	 * @param board
+	 */
 	public void setPossibleMoves(Board board){
 		for (Piece p : pieces) {
 			if (!p.isDead()) {
@@ -32,6 +33,11 @@ public class Player implements Serializable{
 		}
 	}
 	
+	/**
+	 * Sets valid moves for all alive pieces belonging to this player.
+	 * 
+	 * @param board
+	 */
 	public void setValidMoves(Board board) {
 		for (Piece p : pieces) {
 			if (!p.isDead()) {

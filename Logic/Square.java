@@ -46,6 +46,11 @@ public class Square implements Serializable{
 		piece.setPosition(c);
 	}
 
+	/**
+	 * Sets a piece on this square. If this square is currently occupied by another piece, sets that piece to be dead.
+	 * 
+	 * @param piece the piece to set
+	 */
 	public void setPiece(Piece piece) {
 		if (piece != null) {
 			piece.setPosition(position);

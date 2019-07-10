@@ -18,6 +18,12 @@ public abstract class Piece implements Serializable{
 		this.owner = owner;
 	}
 	
+	/**
+	 * Moves this piece to the desired position on the board
+	 * 
+	 * @param board the instance of the board the piece is on
+	 * @param newPosition the desired position
+	 */
 	public void move(Board board, Coordinate newPosition) {
 		board.placePiece(null, position);
 		board.placePiece(this, newPosition);
@@ -31,6 +37,8 @@ public abstract class Piece implements Serializable{
 	}
 
 	/**
+	 * Sets this piece to be dead and clears all of it's move lists.
+	 * 
 	 * @param dead whether the piece is dead or not
 	 */
 	public void setDead(boolean dead) {
@@ -103,18 +111,33 @@ public abstract class Piece implements Serializable{
 		return owner;
 	}
 	
+	/**
+	 * Clears all valid moves for this piece.
+	 */
 	public void resetValidMoves() {
 		validMoves.removeAll(validMoves);
 	}
 	
+	/**
+	 * Clears all possible moves for this piece.
+	 */
 	public void resetPossibleMoves() {
 		possibleMoves.removeAll(possibleMoves);
 	}
 	
+	/**
+	 * Clears all aggressive moves for this piece.
+	 */
 	public void resetAggressiveMoves() {
 		aggressiveMoves.removeAll(aggressiveMoves);
 	}
 	
+	/**
+	 * Sets all valid moves for this piece.
+	 * A valid move is a move that a player is legally allowed to make.
+	 * 
+	 * @param board the instance of the board the piece is on
+	 */
 	public void setValidMoves(Board board) {
 		resetValidMoves();
 		
@@ -134,8 +157,7 @@ public abstract class Piece implements Serializable{
 				copiedPiece.move(boardCopy, possibleMove.getPosition());
 			}
 			
-			boardCopy.setPossibleMoves();
-			boardCopy.setCheck();
+			boardCopy.testBoardUpdate();
 			if ((this.owner.getName() == Name.white) && (!boardCopy.getWhite().isInCheck())) {
 				validMoves.add(possibleMove);
 			}
@@ -147,7 +169,10 @@ public abstract class Piece implements Serializable{
 
 	
 	/**
-	 * Sets all possible moves for this piece
+	 * Sets all possible and aggressive moves for this piece.
+	 * A possible move is a move that a piece can make purely based on a piece's rules for movement (includes potentially illegal moves where a move places the owner in check).
+	 * An aggressive move is a move that a piece can make where it can take an opposing piece. All possible moves are aggressive moves except in the case where the possible move is a pawn moving directly forward.
+	 * 
 	 * @param board the instance of the board the piece is on
 	 */
 	public abstract void setPossibleMoves(Board board);

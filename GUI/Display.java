@@ -1,12 +1,11 @@
 package GUI;
 import Logic.ChessUtility;
+
 import java.awt.Color;
 
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import javax.swing.JPanel;
 import Logic.Board;
 import Logic.Square;
 import Pieces.*;
-import Resources.Name;
 import Runner.Controller;
 
 public class Display extends JPanel{
@@ -70,9 +68,6 @@ public class Display extends JPanel{
 					g.fillRect(i*CHECKER_SIZE, j*CHECKER_SIZE, CHECKER_SIZE, CHECKER_SIZE);
 				}
 			}
-		}
-		if (board != null) {
-
 		}
 
 		drawAllPieces();
