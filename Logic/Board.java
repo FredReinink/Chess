@@ -11,6 +11,9 @@ public class Board implements Serializable{
 	public static final int WHITE_PAWN_ROW = 6;
 	public static final int WHITE_ENPASSENT_ROW = 5;
 	
+	public static final int ROW_4 = 4;
+	public static final int ROW_3 = 3;
+	
 	public static final int BLACK_KING_ROW = 0;
 	public static final int BLACK_PAWN_ROW = 1;
 	public static final int BLACK_ENPASSENT_ROW = 2;

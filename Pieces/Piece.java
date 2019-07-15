@@ -29,23 +29,43 @@ public abstract class Piece implements Serializable{
 	 * Moves this piece to the desired position on the board
 	 * 
 	 * @param board the instance of the board the piece is on
-	 * @param newPosition the desired position
+	 * @param newPosition coordinate of the desired position
 	 */
 	public void move(Board board, Coordinate newPosition) {
-		enPassentCheck(board, position, newPosition);
+		enPassentHandler(board, newPosition);
 		
 		board.placePiece(null, position);
 		board.placePiece(this, newPosition);
 	}
 	
-	public void enPassentCheck(Board board, Coordinate startingPosition, Coordinate newPosition) {
-		board.resetEnPassent();
-		
+	/**
+	 * When en passent is used, this method kills the opposing pawn.
+	 * When a pawn uses it's double-step move, this method sets enPassentAvailable for the appropriate square and removes enPassentAvailable after one turn.
+	 * 
+	 * @param board the board the instance of the board the piece is on
+	 * @param newPosition the coordinate of the desired position
+	 */
+	public void enPassentHandler(Board board, Coordinate newPosition) {
 		if (this instanceof Pawn) {
-			if (startingPosition.getRow() == Board.WHITE_PAWN_ROW && newPosition.getRow() == 4) {
+			Square[][] squares = board.getSquares();
+			Square newSquare = squares[newPosition.getRow()][newPosition.getColumn()];
+
+			if (newSquare.getEnPassentAvailable() == true) {
+				Coordinate pawnToKill;
+				if (this.owner.getName() == Name.white) {
+					pawnToKill = new Coordinate(Board.ROW_3,newPosition.getColumn());
+				} else {
+					pawnToKill = new Coordinate(Board.ROW_4,newPosition.getColumn());
+				}
+				board.placePiece(null, pawnToKill);
+			}
+
+			board.resetEnPassent();
+
+			if (position.getRow() == Board.WHITE_PAWN_ROW && newPosition.getRow() == Board.ROW_4) {
 				Square enPassentSquare = board.getSquares()[Board.WHITE_ENPASSENT_ROW][position.getColumn()];
 				enPassentSquare.setEnPassentAvailable(true);
-			} else if (startingPosition.getRow() == Board.BLACK_PAWN_ROW && newPosition.getRow() == 3) {
+			} else if (position.getRow() == Board.BLACK_PAWN_ROW && newPosition.getRow() == Board.ROW_3) {
 				Square enPassentSquare = board.getSquares()[Board.BLACK_ENPASSENT_ROW][position.getColumn()];
 				enPassentSquare.setEnPassentAvailable(true);
 			}
