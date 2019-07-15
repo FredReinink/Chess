@@ -19,6 +19,10 @@ public class Square implements Serializable{
 	public void setEnPassentAvailable(boolean b) {
 		enPassentAvailable = b;
 	}
+	
+	public boolean getEnPassentAvailable() {
+		return enPassentAvailable;
+	}
 
 	public Square(Coordinate c) {
 		position = c;

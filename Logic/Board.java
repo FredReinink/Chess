@@ -7,6 +7,14 @@ import Pieces.*;
 import Resources.Name;
 
 public class Board implements Serializable{
+	public static final int WHITE_KING_ROW = 7;
+	public static final int WHITE_PAWN_ROW = 6;
+	public static final int WHITE_ENPASSENT_ROW = 5;
+	
+	public static final int BLACK_KING_ROW = 0;
+	public static final int BLACK_PAWN_ROW = 1;
+	public static final int BLACK_ENPASSENT_ROW = 2;
+	
 	private Square[][] board;
 	private Player white;
 	private Player black;
@@ -140,11 +148,11 @@ public class Board implements Serializable{
 		int kingRow;
 		
 		if (player.getName() == Name.white) {
-			pawnRow = 6;
-			kingRow = 7;
+			pawnRow = WHITE_PAWN_ROW;
+			kingRow = WHITE_KING_ROW;
 		} else {
-			pawnRow = 1;
-			kingRow = 0;
+			pawnRow = BLACK_PAWN_ROW;
+			kingRow = BLACK_KING_ROW;
 		}
 		
 		ArrayList<Piece> pieces = player.getPieces();
@@ -155,6 +163,16 @@ public class Board implements Serializable{
 			board[kingRow][i].setPiece(pieces.get(j));
 			j++;
 		}	
+	}
+	
+	/**
+	 * Sets all enPassentAvailable variables to false
+	 */
+	public void resetEnPassent() {
+		for (int i = 0; i < 8; i++) {
+			board[WHITE_ENPASSENT_ROW][i].setEnPassentAvailable(false);;
+			board[BLACK_ENPASSENT_ROW][i].setEnPassentAvailable(false);;
+		}
 	}
 	
 	/**

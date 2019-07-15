@@ -10,9 +10,16 @@ public abstract class Piece implements Serializable{
 	private boolean dead = false;
 	protected Player owner;
 	protected Coordinate position;
+	
+	/* A possible move is a move that a piece can make purely based on a piece's rules for movement (includes potentially illegal moves where a move places the owner in check). */
 	protected ArrayList<Square> possibleMoves = new ArrayList<Square>();
-	protected ArrayList<Square> validMoves = new ArrayList<Square>();
+	
+	/* A valid move is a move that a player is legally allowed to make. */
+	private ArrayList<Square> validMoves = new ArrayList<Square>();
+	
+	/* An aggressive move is a move that a piece can make where it can take an opposing piece. All possible moves are aggressive moves except in the case where the possible move is a pawn moving directly forward. */
 	protected ArrayList<Square> aggressiveMoves = new ArrayList<Square>();
+	
 	
 	public Piece(Player owner) {
 		this.owner = owner;
@@ -25,8 +32,24 @@ public abstract class Piece implements Serializable{
 	 * @param newPosition the desired position
 	 */
 	public void move(Board board, Coordinate newPosition) {
+		enPassentCheck(board, position, newPosition);
+		
 		board.placePiece(null, position);
 		board.placePiece(this, newPosition);
+	}
+	
+	public void enPassentCheck(Board board, Coordinate startingPosition, Coordinate newPosition) {
+		board.resetEnPassent();
+		
+		if (this instanceof Pawn) {
+			if (startingPosition.getRow() == Board.WHITE_PAWN_ROW && newPosition.getRow() == 4) {
+				Square enPassentSquare = board.getSquares()[Board.WHITE_ENPASSENT_ROW][position.getColumn()];
+				enPassentSquare.setEnPassentAvailable(true);
+			} else if (startingPosition.getRow() == Board.BLACK_PAWN_ROW && newPosition.getRow() == 3) {
+				Square enPassentSquare = board.getSquares()[Board.BLACK_ENPASSENT_ROW][position.getColumn()];
+				enPassentSquare.setEnPassentAvailable(true);
+			}
+		}
 	}
 	
 	/**
@@ -37,7 +60,7 @@ public abstract class Piece implements Serializable{
 	}
 
 	/**
-	 * Sets this piece to be dead and clears all of it's move lists.
+	 * Sets the piece to be dead and clears all move lists.
 	 * 
 	 * @param dead whether the piece is dead or not
 	 */
@@ -134,7 +157,6 @@ public abstract class Piece implements Serializable{
 	
 	/**
 	 * Sets all valid moves for this piece.
-	 * A valid move is a move that a player is legally allowed to make.
 	 * 
 	 * @param board the instance of the board the piece is on
 	 */
@@ -170,8 +192,6 @@ public abstract class Piece implements Serializable{
 	
 	/**
 	 * Sets all possible and aggressive moves for this piece.
-	 * A possible move is a move that a piece can make purely based on a piece's rules for movement (includes potentially illegal moves where a move places the owner in check).
-	 * An aggressive move is a move that a piece can make where it can take an opposing piece. All possible moves are aggressive moves except in the case where the possible move is a pawn moving directly forward.
 	 * 
 	 * @param board the instance of the board the piece is on
 	 */

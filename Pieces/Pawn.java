@@ -4,9 +4,22 @@ import Logic.*;
 import Resources.Name;
 
 public class Pawn extends Piece{
+	int startingRow;
+	int promotionRow;
+	int moveOffset;
 
 	public Pawn(Player owner) {
 		super(owner);
+		
+		if (this.getOwner().getName() == Name.white) {
+			startingRow = Board.WHITE_PAWN_ROW;
+			promotionRow = Board.BLACK_KING_ROW;
+			moveOffset = -1;
+		} else {
+			startingRow = Board.BLACK_PAWN_ROW;
+			promotionRow = Board.WHITE_KING_ROW;
+			moveOffset = 1;
+		}
 	}
 
 	@Override
@@ -15,20 +28,7 @@ public class Pawn extends Piece{
 		resetAggressiveMoves();
 		
 		Square[][] squares = board.getSquares();
-		
-		int startingRow;
-		int promotionRow;
-		int moveOffset;
-		if (this.getOwner().getName() == Name.white) {
-			startingRow = 6;
-			promotionRow = 0;
-			moveOffset = -1;
-		} else {
-			startingRow = 1;
-			promotionRow = 7;
-			moveOffset = 1;
-		}
-		
+	
 		if (this.position.getRow() == promotionRow) {
 			//promotion
 			return;
@@ -39,18 +39,18 @@ public class Pawn extends Piece{
 		if (!ChessUtility.containsPiece(candidateMove)) {
 			possibleMoves.add(candidateMove);
 		}
-		//if the square in front and to the right of the pawn contains an enemy piece, it is a valid move
+		//if the square in front and to the right of the pawn contains an enemy piece OR is eligible for en passent, it is a valid move
 		if (position.getColumn() != 7) {
 			candidateMove = squares[position.getRow() + moveOffset][position.getColumn()+1];
-			if (ChessUtility.containsEnemyPiece(candidateMove,this.owner.getName())) {
+			if (ChessUtility.containsEnemyPiece(candidateMove,this.owner.getName()) || candidateMove.getEnPassentAvailable() == true) {
 				possibleMoves.add(candidateMove);
 				aggressiveMoves.add(candidateMove);
 			}
 		}
-		//if the square in front and to the left of the pawn contains an enemy piece, it is a valid move
+		//if the square in front and to the left of the pawn contains an enemy piece OR is eligible for en passent, it is a valid move
 		if (position.getColumn() != 0) {
 			candidateMove = squares[position.getRow() + moveOffset][position.getColumn()-1];
-			if (ChessUtility.containsEnemyPiece(candidateMove,this.owner.getName())) {
+			if (ChessUtility.containsEnemyPiece(candidateMove,this.owner.getName()) || candidateMove.getEnPassentAvailable() == true) {
 				possibleMoves.add(candidateMove);
 				aggressiveMoves.add(candidateMove);
 			}
@@ -64,7 +64,4 @@ public class Pawn extends Piece{
 			}
 		}
 	}
-	
-
-
 }
