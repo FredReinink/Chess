@@ -65,6 +65,30 @@ public class ChessUtility {
 		}
 		return pieceFile;
 	}
+	
+	/**
+	 * @param objectToCopy
+	 * @return Returns a deep copy of objectToCopy
+	 */
+	public static Object deepCopy(Object objectToCopy) {
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(objectToCopy);
+
+			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+			ObjectInputStream ois = new ObjectInputStream(bais);
+			return ois.readObject();
+		} catch (IOException e) {
+			System.out.println("Board Copying error: IO");
+			e.printStackTrace();
+			return null;
+		} catch (ClassNotFoundException e) {
+			System.out.println("Board Copying error: ClassNotFound");
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 	/**
 	 * Determines if there is a piece on the square
@@ -100,29 +124,5 @@ public class ChessUtility {
 			return true;
 		}
 		return false;
-	}
-	
-	/**
-	 * @param objectToCopy
-	 * @return Returns a deep copy of @param
-	 */
-	public static Object deepCopy(Object objectToCopy) {
-		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ObjectOutputStream oos = new ObjectOutputStream(baos);
-			oos.writeObject(objectToCopy);
-
-			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-			ObjectInputStream ois = new ObjectInputStream(bais);
-			return ois.readObject();
-		} catch (IOException e) {
-			System.out.println("Board Copying error: IO");
-			e.printStackTrace();
-			return null;
-		} catch (ClassNotFoundException e) {
-			System.out.println("Board Copying error: ClassNotFound");
-			e.printStackTrace();
-			return null;
-		}
 	}
 }
