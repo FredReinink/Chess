@@ -18,6 +18,19 @@ public class Board implements Serializable{
 	public static final int BLACK_PAWN_ROW = 1;
 	public static final int BLACK_ENPASSENT_ROW = 2;
 	
+	public static final Coordinate WHITE_KING_STARTING_POSITION = new Coordinate(WHITE_KING_ROW, 4);
+	public static final Coordinate BLACK_KING_STARTING_POSITION = new Coordinate(BLACK_KING_ROW, 4);
+	
+	public static final Coordinate WHITE_KING_LEFT_CASTLE_POSITION = new Coordinate(WHITE_KING_ROW, 2);
+	public static final Coordinate WHITE_KING_RIGHT_CASTLE_POSITION = new Coordinate(WHITE_KING_ROW, 6);
+	public static final Coordinate BLACK_KING_LEFT_CASTLE_POSITION = new Coordinate(BLACK_KING_ROW, 2);
+	public static final Coordinate BLACK_KING_RIGHT_CASTLE_POSITION = new Coordinate(BLACK_KING_ROW, 6);
+	
+	public static final Coordinate WHITE_ROOK_LEFT_CASTLE_POSITION = new Coordinate(WHITE_KING_ROW, 3);
+	public static final Coordinate WHITE_ROOK_RIGHT_CASTLE_POSITION = new Coordinate(WHITE_KING_ROW, 5);
+	public static final Coordinate BLACK_ROOK_LEFT_CASTLE_POSITION = new Coordinate(BLACK_KING_ROW, 3);
+	public static final Coordinate BLACK_ROOK_RIGHT_CASTLE_POSITION = new Coordinate(BLACK_KING_ROW, 5);
+	
 	private Square[][] board;
 	private Player white;
 	private Player black;
@@ -55,7 +68,7 @@ public class Board implements Serializable{
 	}
 	
 	/**
-	 * Determines whether either player is currently in check and sets the inCheck instance variable in Player accordingly.
+	 * Determines whether either player is currently in check and sets the inCheck variable in Player accordingly.
 	 */
 	public void setCheck() {
 		white.setinCheck(false);
@@ -82,6 +95,34 @@ public class Board implements Serializable{
 				} 
 			}
 		}
+	}
+	
+	/**
+	 * Determines whether the opposing player is attacking the specified square
+	 * 
+	 * @param name the name of the friendly player
+	 * @param squareToCheck the square to check
+	 * @return
+	 */
+	public boolean isAttacked(Name name, Square squareToCheck) {
+		if (name == Name.white) {
+			for (Piece piece : black.getPieces()) {
+				for (Square square : piece.getAggressiveMoves()) {
+					if (square.getPosition().equals(squareToCheck.getPosition())) {
+						return true;
+					}
+				}
+			}
+		} else {
+			for (Piece piece : white.getPieces()) {
+				for (Square square : piece.getAggressiveMoves()) {
+					if (square.getPosition().equals(squareToCheck.getPosition())) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 	/**

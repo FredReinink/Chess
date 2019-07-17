@@ -7,9 +7,20 @@ import Logic.ChessUtility;
 import Logic.Coordinate;
 import Logic.Player;
 import Logic.Square;
+import Resources.Side;
 
 public class Rook extends Piece{
+	private Side side;
+	
+	public Side getSide() {
+		return side;
+	}
 
+	public Rook(Player owner, Side side) {
+		super(owner);
+		this.side = side;
+	}
+	
 	public Rook(Player owner) {
 		super(owner);
 	}
@@ -52,4 +63,12 @@ public class Rook extends Piece{
 		aggressiveMoves.addAll(possibleMoves);
 	}
 
+	@Override
+	public void castleForfeitChecker() {
+		if (side == Side.left) {
+			owner.getKing().setLeftCastleAvailable(false);
+		} else if (side == Side.right) {
+			owner.getKing().setRightCastleAvailable(false);
+		}
+	}
 }

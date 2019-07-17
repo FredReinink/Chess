@@ -11,13 +11,13 @@ public abstract class Piece implements Serializable{
 	protected Player owner;
 	protected Coordinate position;
 	
-	/* A possible move is a move that a piece can make purely based on a piece's rules for movement (includes potentially illegal moves where a move places the owner in check). */
+	/* A possible move is a move that a piece can make purely based on a piece's rules for movement (includes potentially illegal moves where a move places the owner in check etc.). */
 	protected ArrayList<Square> possibleMoves = new ArrayList<Square>();
 	
 	/* A valid move is a move that a player is legally allowed to make. */
 	private ArrayList<Square> validMoves = new ArrayList<Square>();
 	
-	/* An aggressive move is a move that a piece can make where it can take an opposing piece. All possible moves are aggressive moves except in the case where the possible move is a pawn moving directly forward. */
+	/* An aggressive move is a move that a piece can make where it can take an opposing piece. All possible moves are aggressive moves except in the case where the possible move is a pawn moving directly forward or a king is castling */
 	protected ArrayList<Square> aggressiveMoves = new ArrayList<Square>();
 	
 	
@@ -32,10 +32,30 @@ public abstract class Piece implements Serializable{
 	 * @param newPosition coordinate of the desired position
 	 */
 	public void move(Board board, Coordinate newPosition) {
+		castleForfeitChecker();
 		enPassentHandler(board, newPosition);
+		castlingHandler(board, newPosition);
 		
 		board.placePiece(null, position);
 		board.placePiece(this, newPosition);
+	}
+	
+	/**
+	 * When castling is used, this method moves the corresponding rook to the right square
+	 * 
+	 * @param board the instance of the board the piece is on
+	 * @param newPosition coordinate of the desired position
+	 */
+	public void castlingHandler(Board board, Coordinate newPosition) {
+	}
+	
+	/**
+	 * If a player forfeits their right to castle by moving their king or rook, sets the corresponding castleAvailable variables in King to false.
+	 * 
+	 * @param board
+	 * @param newPosition
+	 */
+	public void castleForfeitChecker() {
 	}
 	
 	/**
@@ -46,30 +66,6 @@ public abstract class Piece implements Serializable{
 	 * @param newPosition the coordinate of the desired position
 	 */
 	public void enPassentHandler(Board board, Coordinate newPosition) {
-		if (this instanceof Pawn) {
-			Square[][] squares = board.getSquares();
-			Square newSquare = squares[newPosition.getRow()][newPosition.getColumn()];
-
-			if (newSquare.getEnPassentAvailable() == true) {
-				Coordinate pawnToKill;
-				if (this.owner.getName() == Name.white) {
-					pawnToKill = new Coordinate(Board.ROW_3,newPosition.getColumn());
-				} else {
-					pawnToKill = new Coordinate(Board.ROW_4,newPosition.getColumn());
-				}
-				board.placePiece(null, pawnToKill);
-			}
-
-			board.resetEnPassent();
-
-			if (position.getRow() == Board.WHITE_PAWN_ROW && newPosition.getRow() == Board.ROW_4) {
-				Square enPassentSquare = board.getSquares()[Board.WHITE_ENPASSENT_ROW][position.getColumn()];
-				enPassentSquare.setEnPassentAvailable(true);
-			} else if (position.getRow() == Board.BLACK_PAWN_ROW && newPosition.getRow() == Board.ROW_3) {
-				Square enPassentSquare = board.getSquares()[Board.BLACK_ENPASSENT_ROW][position.getColumn()];
-				enPassentSquare.setEnPassentAvailable(true);
-			}
-		}
 	}
 	
 	/**
@@ -185,15 +181,11 @@ public abstract class Piece implements Serializable{
 		
 		ArrayList<Square> possibleMovesCopy = new ArrayList<Square>(possibleMoves);
 		
-		System.out.println("\n-----------------------------------------");
-		System.out.println("For " + this + " At " + this.getPosition().getRow() + " " + this.getPosition().getColumn());
 		for (Square possibleMove : possibleMovesCopy) {
-			System.out.println("Checking move: " + possibleMove.getPosition().getRow() + " " + possibleMove.getPosition().getColumn());
 			Board boardCopy = (Board) ChessUtility.deepCopy(board);
 			
 			//gets the piece on the copied board that corresponds to this piece
 			Piece copiedPiece = boardCopy.getSquares()[position.getRow()][position.getColumn()].getPiece();
-			System.out.println(copiedPiece);
 			
 			if (copiedPiece != null) {
 				copiedPiece.move(boardCopy, possibleMove.getPosition());
