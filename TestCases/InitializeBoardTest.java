@@ -1,9 +1,11 @@
 package TestCases;
 import GUI.*;
 
+
 import Logic.*;
 import Pieces.*;
 import Resources.*;
+import Runner.Controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +21,7 @@ class InitializeBoardTest {
 		Player black = new Player(Name.black);
 		
 		ArrayList<Piece> pieces = white.getPieces();
-		Board board = new Board(white,black);
+		Board board = new Board(white,black, new Controller());
 		Square[][] squares = board.getSquares();
 		
 		Piece piece00 = squares[0][0].getPiece();

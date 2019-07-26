@@ -113,4 +113,8 @@ public class Player implements Serializable{
 		pieces.add(new Knight(this));
 		pieces.add(new Rook(this,Side.right));
 	}
+	
+	public void addPiece(Piece pieceToAdd) {
+		pieces.add(pieceToAdd);
+	}
 }

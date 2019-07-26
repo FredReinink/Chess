@@ -1,22 +1,33 @@
 package GUI;
 import Logic.ChessUtility;
+import Logic.Player;
 
 import java.awt.Color;
-
-
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 import Logic.Board;
 import Logic.Square;
 import Pieces.*;
+import Resources.Name;
 import Runner.Controller;
 
 public class Display extends JPanel{
@@ -35,6 +46,7 @@ public class Display extends JPanel{
 	private Controller controller;
 	private Graphics g;
 	private Board board;
+	private JFrame frame;
 
 	public void setBoard(Board board) {
 		this.board = board;
@@ -43,7 +55,7 @@ public class Display extends JPanel{
 	public Display (Controller c){
 		controller = c;
 		addMouseListener(controller);
-		JFrame frame = new JFrame();
+		frame = new JFrame();
 		frame.setSize(FRAME_WIDTH,FRAME_HEIGHT);
 		frame.getContentPane().add(this);
 		frame.setLocationRelativeTo(null);
@@ -64,7 +76,7 @@ public class Display extends JPanel{
 		//i == rows j == columns
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				if ((i % 2 == 0 && j % 2 == 1) || (i % 2== 1 && j % 2 == 0)) {
+				if ((i % 2 == 0 && j % 2 == 1) || (i % 2 == 1 && j % 2 == 0)) {
 					g.fillRect(i*CHECKER_SIZE, j*CHECKER_SIZE, CHECKER_SIZE, CHECKER_SIZE);
 				}
 			}
@@ -73,20 +85,20 @@ public class Display extends JPanel{
 		drawAllPieces();
 		drawSquareHighlights();
 	}
-	
+
 	public void drawSquareHighlights(){
 		Square selectedSquare = controller.getSelectedSquare();
-		
+
 		try {
 			System.out.println("====================================================================\n");
 			System.out.println("the selected piece is " + selectedSquare.getPiece() + " at position Row: " + selectedSquare.getRow() + " Column: " + selectedSquare.getColumn());
 			ArrayList<Square> possibleMoves = selectedSquare.getPiece().getPossibleMoves();
 			ArrayList<Square> validMoves = selectedSquare.getPiece().getValidMoves();
-			
-			
+
+
 			System.out.println("this piece has " + possibleMoves.size() + " possible moves");
 			System.out.println("this piece has " + validMoves.size() + " valid moves");
-			
+
 			for (Square s : validMoves) {
 				g.setColor(Color.YELLOW);
 				g.drawRect(s.getColumn()*CHECKER_SIZE, s.getRow()*CHECKER_SIZE, CHECKER_SIZE, CHECKER_SIZE);
@@ -117,19 +129,84 @@ public class Display extends JPanel{
 
 	/**
 	 * Draws the image contained by the file on the specified square
+	 * 
 	 * @param pieceFile the file containing the image to draw
 	 * @param square the square to draw the image on
 	 */
 	public void drawPiece(File pieceFile, Square square) {
 		Image pieceImage;
+		pieceImage = getScaledImage(pieceFile);
+		g.drawImage(pieceImage, transformCoordinate(square.getColumn()), transformCoordinate(square.getRow()), null);
+	}
+
+	/**
+	 * Returns the image contained by the specified file. The Image is scaled to fit within the defined checker size.
+	 * 
+	 * @param imageFile the file containing the image.
+	 * @return A scaled version of the image.
+	 */
+	public Image getScaledImage(File imageFile) {
+		Image scaledImage = null;
 		try {
-			pieceImage = ImageIO.read(pieceFile);
-			Image scaledImage = pieceImage.getScaledInstance(CHECKER_SIZE, CHECKER_SIZE, 0);
-			g.drawImage(scaledImage, transformCoordinate(square.getColumn()), transformCoordinate(square.getRow()), null);
+			scaledImage = ImageIO.read(imageFile).getScaledInstance(CHECKER_SIZE, CHECKER_SIZE, 0);
 		} catch (IOException e) {
-			System.out.println("Could not load piece image resource");
+			System.out.println("Error reading image");
 			e.printStackTrace();
-		} 
+		}
+		return scaledImage;
+	}
+
+	/**
+	 * Creates a dialog box that allows the user to select a piece to promote a pawn to.
+	 * 
+	 * @param owner the player that owns the pawn to be promoted
+	 * @return The type of piece the user selects ("Queen", "Rook", "Bishop", or "Knight")
+	 */
+	public String drawPawnPromotion(Player owner) {
+		ImageIcon queenImage = new ImageIcon(getScaledImage(ChessUtility.findFile(new Queen(owner))));
+		ImageIcon rookImage = new ImageIcon(getScaledImage(ChessUtility.findFile(new Rook(owner))));
+		ImageIcon bishopImage = new ImageIcon(getScaledImage(ChessUtility.findFile(new Bishop(owner))));
+		ImageIcon knightImage = new ImageIcon(getScaledImage(ChessUtility.findFile(new Knight(owner))));
+
+		JOptionPane promotionPane = new JOptionPane();
+		JButton queenButton = getButton(promotionPane, "Queen", queenImage, WHITE_SQUARE_COLOUR);
+		JButton rookButton = getButton(promotionPane, "Rook", rookImage, BLACK_SQUARE_COLOUR);
+		JButton bishopButton = getButton(promotionPane, "Bishop", bishopImage, WHITE_SQUARE_COLOUR);
+		JButton knightButton = getButton(promotionPane, "Knight", knightImage, BLACK_SQUARE_COLOUR);
+		
+		promotionPane.setOptions(new Object[] {queenButton, rookButton, bishopButton, knightButton});
+		promotionPane.setMessage(null);
+
+		JDialog dialog = promotionPane.createDialog(frame, "Promote to");
+		dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		dialog.setAlwaysOnTop(true);
+		dialog.setVisible(true);
+
+		String selectedType = (String) promotionPane.getValue();
+		System.out.println(selectedType);
+		return selectedType;
+	}
+
+	/**
+	 * Helper method for drawPawnPromotion. Creates a JButton with properties corresponding to this function's parameters. Adds this JButton to the specified JOptionPane.
+	 * 
+	 * @param optionPane The option pane to add the button to
+	 * @param buttonValue The string to assign the button's action command as
+	 * @param image The image to draw on the button
+	 * @param backGroundColour The background colour of the button
+	 * @return the created button
+	 */
+	public JButton getButton(JOptionPane optionPane, String buttonValue, ImageIcon image, Color backGroundColour) {
+		JButton button = new JButton(image);
+		button.setBackground(backGroundColour);
+		button.setActionCommand(buttonValue);
+		ActionListener actionListener = new ActionListener() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				optionPane.setValue(button.getActionCommand());
+			}
+		};
+		button.addActionListener(actionListener);
+		return button;
 	}
 
 	/**

@@ -2,12 +2,14 @@ package Runner;
 
 import java.awt.event.MouseEvent;
 
+
 import java.awt.event.MouseListener;
+import java.io.Serializable;
 
 import GUI.Display;
 import Resources.Name;
 import Logic.*;
-import Pieces.Piece;
+import Pieces.*;
 
 public class Controller implements MouseListener{
 	
@@ -65,7 +67,7 @@ public class Controller implements MouseListener{
 	}
 	
 	public void createBoard() {
-		board = new Board(white,black);
+		board = new Board(white,black,this);
 	}
 	
 	public void start() {
@@ -88,6 +90,28 @@ public class Controller implements MouseListener{
 	@Override
 	public void mousePressed(MouseEvent e) {
 		squarePressed(e);
+	}
+	
+	/**
+	 * Calls relevant GUI methods for pawn promotion and parses the response.
+	 * 
+	 * @param owner the owner of the piece the player chooses to promote.
+	 * @return the type of piece that the player chooses to promote to.
+	 */
+	public Piece promotePawn(Player owner) {
+		Piece selectedPiece = null;
+		
+		String selectedType = display.drawPawnPromotion(owner);
+		if (selectedType.equals("Queen")) {
+			selectedPiece = new Queen(owner);
+		} else if (selectedType.equals("Rook")) {
+			selectedPiece = new Rook(owner);
+		} else if (selectedType.equals("Bishop")) {
+			selectedPiece = new Bishop(owner);
+		} else if (selectedType.equals("Knight")) {
+			selectedPiece = new Knight(owner);
+		} 
+		return selectedPiece;
 	}
 	
 	public void squarePressed(MouseEvent e) {

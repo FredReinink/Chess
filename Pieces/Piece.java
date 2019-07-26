@@ -6,6 +6,12 @@ import java.util.ArrayList;
 import Logic.*;
 import Resources.Name;
 
+/**
+ * Piece and all it's subclasses handle piece movement and game logic surrounding piece-specific rules.
+ * 
+ * @author Fred Reinink
+ *
+ */
 public abstract class Piece implements Serializable{
 	private boolean dead = false;
 	protected Player owner;
@@ -38,6 +44,8 @@ public abstract class Piece implements Serializable{
 		
 		board.placePiece(null, position);
 		board.placePiece(this, newPosition);
+		
+		promotionHandler(board, newPosition);
 	}
 	
 	/**
@@ -47,6 +55,15 @@ public abstract class Piece implements Serializable{
 	 * @param newPosition coordinate of the desired position
 	 */
 	public void castlingHandler(Board board, Coordinate newPosition) {
+	}
+	
+	/**
+	 * Checks if a move results in a pawn being on it's promotion row. If so, gets user input for what piece type they would like and promotes the pawn accordingly.
+	 * 
+	 * @param board the instance of the board the piece is on
+	 * @param newPosition the coordinate of the desired position
+	 */
+	public void promotionHandler(Board board, Coordinate newPosition) {
 	}
 	
 	/**
@@ -118,7 +135,7 @@ public abstract class Piece implements Serializable{
 	 * @param c the coordinate of the square the piece wants to move to.
 	 */
 	protected void pointMoveHelper(Board board, Coordinate c) {
-		if (c.offBoard() == false) {
+		if (c.isOffBoard() == false) {
 			Square candidateMove = board.getSquares()[c.getRow()][c.getColumn()];
 			if (!ChessUtility.containsFriendlyPiece(candidateMove,this.owner.getName())) {
 				possibleMoves.add(candidateMove);

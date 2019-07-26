@@ -55,14 +55,14 @@ public class Square implements Serializable{
 	 * 
 	 * @param piece the piece to set
 	 */
-	public void setPiece(Piece piece) {
-		if (piece != null) {
-			piece.setPosition(position);
+	public void setPiece(Piece pieceToSet) {
+		if (pieceToSet != null) {
+			pieceToSet.setPosition(position);
 			
-			if (this.piece != null) {
-				this.piece.setDead(true);
+			if (piece != null) {
+				piece.setDead(true);
 			}
 		}
-		this.piece = piece;
+		piece = pieceToSet;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import Pieces.*;
 import Resources.Name;
+import Runner.Controller;
 
 public class Board implements Serializable{
 	public static final int WHITE_KING_ROW = 7;
@@ -30,6 +31,8 @@ public class Board implements Serializable{
 	public static final Coordinate WHITE_ROOK_RIGHT_CASTLE_POSITION = new Coordinate(WHITE_KING_ROW, 5);
 	public static final Coordinate BLACK_ROOK_LEFT_CASTLE_POSITION = new Coordinate(BLACK_KING_ROW, 3);
 	public static final Coordinate BLACK_ROOK_RIGHT_CASTLE_POSITION = new Coordinate(BLACK_KING_ROW, 5);
+	
+	private transient Controller controller;
 	
 	private Square[][] board;
 	private Player white;
@@ -166,7 +169,8 @@ public class Board implements Serializable{
 	 * @param white the player with Name white
 	 * @param black the player with Name black
 	 */
-	public Board(Player white, Player black) {
+	public Board(Player white, Player black, Controller controller) {
+		this.controller = controller;
 		this.white = white;
 		this.black = black;
 		
@@ -220,6 +224,20 @@ public class Board implements Serializable{
 	}
 	
 	/**
+	 * Promotes a specified pawn.
+	 * 
+	 * @param pawn the pawn to promote
+	 */
+	public void promotePawn(Pawn pawn) {
+		if (controller != null) {
+			Player owner = pawn.getOwner();
+			Piece selectedPiece = controller.promotePawn(owner);
+			owner.addPiece(selectedPiece);
+			placePiece(selectedPiece, pawn.getPosition());
+		}
+	}
+	
+	/**
 	 * Places one piece on the square with the designated coordinates
 	 * 
 	 * @param p the piece to be placed
@@ -229,4 +247,5 @@ public class Board implements Serializable{
 	public void placePiece(Piece p, Coordinate position) {
 		board[position.getRow()][position.getColumn()].setPiece(p);
 	}
+	
 }
