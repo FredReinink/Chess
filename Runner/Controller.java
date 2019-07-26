@@ -4,7 +4,6 @@ import java.awt.event.MouseEvent;
 
 
 import java.awt.event.MouseListener;
-import java.io.Serializable;
 
 import GUI.Display;
 import Resources.Name;
@@ -69,8 +68,23 @@ public class Controller implements MouseListener{
 		board = new Board(white,black,this);
 	}
 	
+	/**
+	 * Starts the game
+	 */
 	public void start() {
 		board.update();
+	}
+	
+	/**
+	 * Restarts the game
+	 */
+	public void restart() {
+		createPlayers();
+		createBoard();
+		display.setBoard(board);
+		turn = Name.white;
+		selectedSquare = null;
+		start();
 	}
 	
 	/**
@@ -81,11 +95,17 @@ public class Controller implements MouseListener{
 	public void checkmate(Player winner) {
 		if (!display.continueAfterCheckmate(winner)){
 			display.closeGame();
+		} else {
+			restart();
 		}
 	}
 	
 	public void stalemate() {
-		
+		if (!display.continueAfterDraw()){
+			display.closeGame();
+		} else {
+			restart();
+		}
 	}
 	
 	/**

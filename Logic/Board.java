@@ -37,6 +37,7 @@ public class Board implements Serializable{
 	private Square[][] board;
 	private Player white;
 	private Player black;
+	private Board previousState;
 
 	public Controller getController() {
 		return controller;
@@ -56,6 +57,10 @@ public class Board implements Serializable{
 	public Square[][] getSquares() {
 		return board;
 	}
+	
+	public boolean equals(Board boardToCompare) {
+		return false;
+	}
 
 	/**
 	 * Updates the board state.
@@ -67,6 +72,9 @@ public class Board implements Serializable{
 		winConditionHandler();
 	}
 
+	/**
+	 * Evaluates the board state for checkmate/draws and calls the game-ending methods in controller.
+	 */
 	public void winConditionHandler() {
 		//null check is for boards that are created to test whether a move results in check. These boards do not have an initialized value for controller and do not need to test for win conditions
 		if (controller != null) {
@@ -74,13 +82,13 @@ public class Board implements Serializable{
 				if (white.isInCheck()) {
 					controller.checkmate(black);
 				} else {
-					//stalemate
+					controller.stalemate();
 				}
 			} else if (!black.hasAValidMove()) {
 				if (black.isInCheck()) {
 					controller.checkmate(white);
 				} else {
-					//stalemate
+					controller.stalemate();
 				}
 			}
 		}

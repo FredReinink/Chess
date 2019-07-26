@@ -194,7 +194,32 @@ public class Display extends JPanel{
 		if (n == 0) {
 			continueGame = true;
 		} 
-		System.out.println(n);
+		return continueGame;
+	}
+	
+	/**
+	 * Creates a JOptionPane that shows a draw and asks the user if they would like to restart or quit.
+	 * 
+	 * Method ref: https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html
+	 * 
+	 * @return whether the user wants to continue playing. False otherwise
+	 */
+	public boolean continueAfterDraw() {
+		Object[] options = {"Restart",
+		"Quit"};
+		int n = JOptionPane.showOptionDialog(frame,
+				"Draw!",
+				"Draw!",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.PLAIN_MESSAGE,
+				null,
+				options,
+				null);
+		
+		Boolean continueGame = false;
+		if (n == 0) {
+			continueGame = true;
+		} 
 		return continueGame;
 	}
 
