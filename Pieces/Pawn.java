@@ -76,7 +76,7 @@ public class Pawn extends Piece{
 			}
 			board.placePiece(null, pawnToKill);
 		}
-
+		
 		board.resetEnPassent();
 
 		if (position.getRow() == Board.WHITE_PAWN_ROW && newPosition.getRow() == Board.ROW_4) {

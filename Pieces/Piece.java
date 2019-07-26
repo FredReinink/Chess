@@ -83,6 +83,7 @@ public abstract class Piece implements Serializable{
 	 * @param newPosition the coordinate of the desired position
 	 */
 	public void enPassentHandler(Board board, Coordinate newPosition) {
+		board.resetEnPassent();
 	}
 	
 	/**
@@ -211,9 +212,11 @@ public abstract class Piece implements Serializable{
 			boardCopy.testBoardUpdate();
 			if ((this.owner.getName() == Name.white) && (!boardCopy.getWhite().isInCheck())) {
 				validMoves.add(possibleMove);
+				owner.setHasAValidMove(true);
 			}
 			if ((this.owner.getName() == Name.black) && (!boardCopy.getBlack().isInCheck())) {
 				validMoves.add(possibleMove);
+				owner.setHasAValidMove(true);
 			}
 		}
 	}

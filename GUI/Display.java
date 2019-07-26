@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -86,6 +87,9 @@ public class Display extends JPanel{
 		drawSquareHighlights();
 	}
 
+	/**
+	 * Draws square highlghting corresponding to a selected piece's valid moves.
+	 */
 	public void drawSquareHighlights(){
 		Square selectedSquare = controller.getSelectedSquare();
 
@@ -155,6 +159,44 @@ public class Display extends JPanel{
 		}
 		return scaledImage;
 	}
+	
+	
+	/**
+	 * Creates a JOptionPane that displays the winner of the game and lets the user decide whether to restart or quit.
+	 * 
+	 * Method ref: https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html
+	 * 
+	 * @param winner the player who won
+	 * @return whether the user wants to continue playing. False otherwise
+	 */
+	public boolean continueAfterCheckmate(Player winner) {
+		String winnerString = "";
+		if (winner.getName() == Name.white) {
+			winnerString = "White";
+		} else if (winner.getName() == Name.black) {
+			winnerString = "Black";
+		}
+		
+		ImageIcon winnerIcon = new ImageIcon(getScaledImage(ChessUtility.findFile(new King(winner))));
+		
+		Object[] options = {"Restart",
+		"Quit"};
+		int n = JOptionPane.showOptionDialog(frame,
+				winnerString + " Wins!",
+				"Checkmate!",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.PLAIN_MESSAGE,
+				winnerIcon,
+				options,
+				null);
+		
+		Boolean continueGame = false;
+		if (n == 0) {
+			continueGame = true;
+		} 
+		System.out.println(n);
+		return continueGame;
+	}
 
 	/**
 	 * Creates a dialog box that allows the user to select a piece to promote a pawn to.
@@ -216,6 +258,13 @@ public class Display extends JPanel{
 	 */
 	public int transformCoordinate(int coord) {
 		return coord * CHECKER_SIZE;
+	}
+	
+	/**
+	 * Sends a close window event to the game's JFrame
+	 */
+	public void closeGame() {
+		frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 	}
 
 }

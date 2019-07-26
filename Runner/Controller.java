@@ -14,7 +14,6 @@ import Pieces.*;
 public class Controller implements MouseListener{
 	
 	private Display display = null;
-	private boolean gameComplete = false;
 	private Player white;
 	private Player black;
 	private Board board;
@@ -30,7 +29,7 @@ public class Controller implements MouseListener{
 	}
 	
 	/**
-	 * Method switches the turn to the other player
+	 * Switches the turn to the other player
 	 */
 	public void switchTurn() {
 		if (turn == Name.white) {
@@ -72,14 +71,26 @@ public class Controller implements MouseListener{
 	
 	public void start() {
 		board.update();
-		
-		while(gameComplete == false) {
-
-		}
 	}
 	
 	/**
-	 * Executes a move from the selectedSquare to the pressed square
+	 * Ends the game and calls relevant GUI methods to display the specified player as the winner.
+	 * 
+	 * @param winner the Name of the winner
+	 */
+	public void checkmate(Player winner) {
+		if (!display.continueAfterCheckmate(winner)){
+			display.closeGame();
+		}
+	}
+	
+	public void stalemate() {
+		
+	}
+	
+	/**
+	 * Executes a move for the piece on the selected square to the specified new square.
+	 * 
 	 * @param pressedSquare the square to move the piece to
 	 */
 	public void executeMove(Square pressedSquare) {
@@ -125,6 +136,8 @@ public class Controller implements MouseListener{
 		display.revalidate();
 		display.repaint();
 	}
+	
+	
 	
 	@Override
 	public void mouseReleased(MouseEvent e) {

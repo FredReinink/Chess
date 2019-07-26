@@ -13,6 +13,7 @@ public class Player implements Serializable{
 	private boolean inCheck;
 	private ArrayList<Piece> pieces;
 	private Name name;
+	private boolean hasAValidMove;
 	
 	public void setinCheck(boolean inCheck) {
 		this.inCheck = inCheck;
@@ -20,6 +21,14 @@ public class Player implements Serializable{
 	
 	public boolean isInCheck() {
 		return inCheck;
+	}
+	
+	public void setHasAValidMove(boolean hasAValidMove) {
+		this.hasAValidMove = hasAValidMove;
+	}
+	
+	public boolean hasAValidMove() {
+		return hasAValidMove;
 	}
 	
 	/**
@@ -41,6 +50,8 @@ public class Player implements Serializable{
 	 * @param board
 	 */
 	public void setValidMoves(Board board) {
+		hasAValidMove = false;
+		
 		for (Piece p : pieces) {
 			if (!p.isDead()) {
 				p.setValidMoves(board);
