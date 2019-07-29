@@ -1,7 +1,6 @@
 package Pieces;
 
 import Logic.Board;
-import Logic.ChessUtility;
 import Logic.Coordinate;
 import Logic.Player;
 import Logic.Square;
@@ -156,17 +155,17 @@ public class King extends Piece {
 		Square[][] squares = board.getSquares();
 
 		if (owner.getName() == Name.white) {
-			if (!ChessUtility.containsPiece(squares[Board.WHITE_KING_ROW][1])) {
-				if (!ChessUtility.containsPiece(squares[Board.WHITE_KING_ROW][2])) {
-					if (!ChessUtility.containsPiece(squares[Board.WHITE_KING_ROW][3])) {
+			if (!Board.containsPiece(squares[Board.WHITE_KING_ROW][1])) {
+				if (!Board.containsPiece(squares[Board.WHITE_KING_ROW][2])) {
+					if (!Board.containsPiece(squares[Board.WHITE_KING_ROW][3])) {
 						return false;
 					}
 				}
 			}
 		} else {
-			if (!ChessUtility.containsPiece(squares[Board.BLACK_KING_ROW][1])) {
-				if (!ChessUtility.containsPiece(squares[Board.BLACK_KING_ROW][2])) {
-					if (!ChessUtility.containsPiece(squares[Board.BLACK_KING_ROW][3])) {
+			if (!Board.containsPiece(squares[Board.BLACK_KING_ROW][1])) {
+				if (!Board.containsPiece(squares[Board.BLACK_KING_ROW][2])) {
+					if (!Board.containsPiece(squares[Board.BLACK_KING_ROW][3])) {
 						return false;
 					}
 				}
@@ -185,14 +184,14 @@ public class King extends Piece {
 		Square[][] squares = board.getSquares();
 
 		if (owner.getName() == Name.white) {
-			if (!ChessUtility.containsPiece(squares[Board.WHITE_KING_ROW][5])) {
-				if (!ChessUtility.containsPiece(squares[Board.WHITE_KING_ROW][6])) {
+			if (!Board.containsPiece(squares[Board.WHITE_KING_ROW][5])) {
+				if (!Board.containsPiece(squares[Board.WHITE_KING_ROW][6])) {
 					return false;
 				}
 			}
 		} else {
-			if (!ChessUtility.containsPiece(squares[Board.BLACK_KING_ROW][5])) {
-				if (!ChessUtility.containsPiece(squares[Board.BLACK_KING_ROW][6])) {
+			if (!Board.containsPiece(squares[Board.BLACK_KING_ROW][5])) {
+				if (!Board.containsPiece(squares[Board.BLACK_KING_ROW][6])) {
 					return false;
 				}
 			}

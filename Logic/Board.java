@@ -11,7 +11,15 @@ import Pieces.*;
 import Resources.Name;
 import Runner.Controller;
 
+/**
+ * This class handles the chess board, including board state, win conditions, check, and is composed of all squares and pieces involved in the game it represents.
+ * 
+ * @author Fred Reinink
+ */
 public class Board implements Serializable{
+	public static final int NUM_ROWS = 8;
+	public static final int NUM_COLS = 8;
+	
 	public static final int WHITE_KING_ROW = 7;
 	public static final int WHITE_PAWN_ROW = 6;
 	public static final int WHITE_ENPASSENT_ROW = 5;
@@ -39,12 +47,12 @@ public class Board implements Serializable{
 
 	private transient Controller controller;
 
-	private Square[][] board;
+	private Square[][] squares;
 	private Player white;
 	private Player black;
 	
-	//past board states mapped to values corresponding to the number of times that state has occurred
-	private HashMap<String,Integer> pastStates = new HashMap<String,Integer>();
+	private HashMap<String,Integer> pastStates = new HashMap<String,Integer>(); //past board states mapped to values corresponding to the number of times that state has occurred
+	
 	
 	public Controller getController() {
 		return controller;
@@ -62,19 +70,18 @@ public class Board implements Serializable{
 	 * @return returns the 2d array of squares that make up this board.
 	 */
 	public Square[][] getSquares() {
-		return board;
+		return squares;
 	}
 	
 	/**
 	 * Clears all mappings in the pastStates map. For efficiency, call this method any time an irreversible move occurs.
-	 * 
 	 */
 	public void clearPastStates() {
 		pastStates.clear();
 	}
 
 	/**
-	 * Updates the board state.
+	 * Updates the board state by updating possible/valid moves, setting check variables and checking for win conditions.
 	 */
 	public void update() {
 		setPossibleMoves();
@@ -91,14 +98,13 @@ public class Board implements Serializable{
 	 * @return Returns true when a three-fold repetition has occurred. False otherwise.
 	 */
 	public boolean addState() {
-		String stateEncoding = getStateEncoding();
-		
 		boolean threeFoldRepetition = false;
-		
+
 		boolean alreadyAdded = false;
 		
+		String stateEncoding = getStateEncoding();
 		for (String key : pastStates.keySet()) {
-			if (stateEncoding.equals(key)) {
+			if (stateEncoding.equals(key)) { //if this board state has already occurred
 				alreadyAdded = true;
 				if (pastStates.get(key) == 2) {
 					threeFoldRepetition = true;
@@ -111,6 +117,7 @@ public class Board implements Serializable{
 		if (!alreadyAdded) {
 			pastStates.put(stateEncoding, 1);
 		}
+		
 		return threeFoldRepetition;
 	}
 
@@ -118,9 +125,8 @@ public class Board implements Serializable{
 	 * Evaluates the board state for checkmate/draws and calls the game-ending methods in controller.
 	 */
 	public void winConditionHandler() {
-		//null check is for boards that are created to test whether a move results in check. These boards do not have an initialized value for controller and do not need to test for win conditions
-		if (controller != null) {
-			if (!white.hasAValidMove()) {
+		if (controller != null) {    //null check is for boards that are created to test whether a move results in check... 
+			if (!white.hasAValidMove()) {    //These boards do not have an initialized value for controller and do not need to test for win conditions.
 				if (white.isInCheck()) {
 					controller.checkmate(black);
 				} else {
@@ -134,6 +140,7 @@ public class Board implements Serializable{
 				}
 			}
 		}
+		
 		if (addState()) {
 			controller.draw("Three-Fold Repetition");
 		}
@@ -176,13 +183,12 @@ public class Board implements Serializable{
 	}
 
 	/**
-	 * Determines whether the opposing player is attacking the specified square
+	 * Determines whether the opposing player is attacking the specified square.
 	 * 
-	 * @param name the name of the friendly player
-	 * @param squareToCheck the square to check
-	 * @return
+	 * @param name the name of the friendly player.
 	 */
 	public boolean isAttacked(Name name, Square squareToCheck) {
+		
 		if (name == Name.white) {
 			for (Piece piece : black.getPieces()) {
 				for (Square square : piece.getAggressiveMoves()) {
@@ -222,33 +228,32 @@ public class Board implements Serializable{
 	}
 
 	/**
-	 * Sole constructor.
-	 * Builds a board out of squares. Each square is initialized with x and y coordinates.
+	 * Builds a board out of squares and places pieces in their designated starting position.
 	 * 
-	 * @param white the player with Name white
-	 * @param black the player with Name black
+	 * @param white the player with Name white.
+	 * @param black the player with Name black.
+	 * @param controller the controller running this instance of the board.
 	 */
 	public Board(Player white, Player black, Controller controller) {
 		this.controller = controller;
 		this.white = white;
 		this.black = black;
 
-		board = new Square[8][8];
-		for (int i = 0; i < 8; i ++) {
-			for (int j = 0; j < 8; j ++) {
-				board[i][j] = new Square(new Coordinate(i,j));
+		squares = new Square[NUM_ROWS][NUM_COLS];
+		for (int i = 0; i < NUM_ROWS; i ++) {
+			for (int j = 0; j < NUM_COLS; j ++) {
+				squares[i][j] = new Square(new Coordinate(i,j));
 			}
 		}
 		placeOrderedPieces(white);
 		placeOrderedPieces(black);
-		System.out.println(this.toString());
 	}
 
 	/**
 	 * Places pieces of a specified player on the board. Assumes that the player's piece list adheres to the following encoding:
 	 * [pawn, pawn, pawn, pawn, pawn, pawn, pawn, pawn, rook, knight, bishop, queen, king, bishop, knight, rook]
 	 * 
-	 * @param player the player whose pieces are to be placed
+	 * @param player the player whose pieces are to be placed.
 	 */
 	public void placeOrderedPieces(Player player) {
 		int pawnRow;
@@ -264,10 +269,13 @@ public class Board implements Serializable{
 
 		ArrayList<Piece> pieces = player.getPieces();
 
-		int j = 8;
-		for (int i = 0; i < 8; i++) {
-			board[pawnRow][i].setPiece(pieces.get(i));
-			board[kingRow][i].setPiece(pieces.get(j));
+		int j = 8; //major pieces start on the 8th index in the piece list encoding.
+		for (int i = 0; i < NUM_ROWS; i++) {
+			Piece pawnToPlace = pieces.get(i);
+			squares[pawnRow][i].setPiece(pawnToPlace);
+			
+			Piece majorPieceToPlace = pieces.get(j);
+			squares[kingRow][i].setPiece(majorPieceToPlace);
 			j++;
 		}	
 	}
@@ -276,20 +284,21 @@ public class Board implements Serializable{
 	 * Sets all enPassentAvailable variables to false
 	 */
 	public void resetEnPassent() {
-		for (int i = 0; i < 8; i++) {
-			board[WHITE_ENPASSENT_ROW][i].setEnPassentAvailable(false);;
-			board[BLACK_ENPASSENT_ROW][i].setEnPassentAvailable(false);;
+		for (int i = 0; i < NUM_ROWS; i++) {
+			squares[WHITE_ENPASSENT_ROW][i].setEnPassentAvailable(false);;
+			squares[BLACK_ENPASSENT_ROW][i].setEnPassentAvailable(false);;
 		}
 	}
 
 	/**
-	 * Promotes a specified pawn.
+	 * Promotes the specified pawn after getting user input for desired promotion type.
+	 * Creates and places the promoted piece.
 	 * 
-	 * @param pawn the pawn to promote
+	 * @param pawn the pawn to promote.
 	 */
 	public void promotePawn(Pawn pawn) {
-		if (controller != null) {
-			Player owner = pawn.getOwner();
+		if (controller != null) {    //Pawn promotions are irrelevant on test boards...
+			Player owner = pawn.getOwner();    //These boards do not have an initialized value for controller and do not need to handle promotions.
 			Piece selectedPiece = controller.promotePawn(owner);
 			owner.addPiece(selectedPiece);
 			placePiece(selectedPiece, pawn.getPosition());
@@ -297,15 +306,14 @@ public class Board implements Serializable{
 	}
 
 	/**
-	 * Places one piece on the square with the designated coordinates
+	 * Places one piece on the square with the designated coordinates.
 	 * 
-	 * @param pieceToPlace the piece to be placed
-	 * @param newPosition the coordinate of the position to place the piece at
+	 * @param pieceToPlace the piece to be placed.
+	 * @param newPosition the coordinate of the position to place the piece at.
 	 */
 	public void placePiece(Piece pieceToPlace, Coordinate newPosition) {
-		Square newSquare = board[newPosition.getRow()][newPosition.getColumn()];
-		if (pieceToPlace != null && newSquare.getPiece() != null) {
-			//irreversible move (piece capture)
+		Square newSquare = squares[newPosition.getRow()][newPosition.getColumn()];
+		if (pieceToPlace != null && newSquare.getPiece() != null) {	    //irreversible move (piece capture) so call clearPastStates()
 			clearPastStates();
 		}
 		
@@ -340,9 +348,9 @@ public class Board implements Serializable{
 	 */
 	public String getStateEncoding() {
 		String stateEncoding = ""; 
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j <8; j++) {
-				Square square = board[i][j];
+		for (int i = 0; i < NUM_ROWS; i++) {
+			for (int j = 0; j < NUM_ROWS; j++) {
+				Square square = squares[i][j];
 				Piece piece = square.getPiece();
 				
 				if (piece == null) {
@@ -392,6 +400,42 @@ public class Board implements Serializable{
 		}
 		
 		return stateEncoding;
+	}
+
+	/**
+	 * Determines if there is a piece on the square
+	 * @param square the square to check
+	 * @return true if there is a piece, false otherwise
+	 */
+	public static boolean containsPiece(Square square) {
+		if (square.getPiece() != null) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Determines if there is an enemy piece on the square
+	 * @param square the square to check
+	 * @return true if there is an enemy piece, false otherwise
+	 */
+	public static boolean containsEnemyPiece(Square square, Name name) {
+		if ((square.getPiece() != null) && (!(square.getPiece().getOwner().getName() == name))) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Determines if there is a friendly piece on the square
+	 * @param square the square to check
+	 * @return true if there is a friendly piece, false otherwise
+	 */
+	public static boolean containsFriendlyPiece(Square square, Name name) {
+		if ((square.getPiece() != null) && (square.getPiece().getOwner().getName() == name)) {
+			return true;
+		}
+		return false;
 	}
 
 }

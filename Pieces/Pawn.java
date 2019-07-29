@@ -32,13 +32,13 @@ public class Pawn extends Piece{
 		if (position.getRow() != promotionRow) {
 			//if the square immediately in front of the pawn does not contain a piece, it is a valid move
 			Square candidateMove = squares[position.getRow() + moveOffset][position.getColumn()];
-			if (!ChessUtility.containsPiece(candidateMove)) {
+			if (!Board.containsPiece(candidateMove)) {
 				possibleMoves.add(candidateMove);
 			}
 			//if the square in front and to the right of the pawn contains an enemy piece OR is eligible for en passent, it is a valid move
 			if (position.getColumn() != 7) {
 				candidateMove = squares[position.getRow() + moveOffset][position.getColumn()+1];
-				if (ChessUtility.containsEnemyPiece(candidateMove,this.owner.getName()) || candidateMove.getEnPassentAvailable() == true) {
+				if (Board.containsEnemyPiece(candidateMove,this.owner.getName()) || candidateMove.getEnPassentAvailable() == true) {
 					possibleMoves.add(candidateMove);
 					aggressiveMoves.add(candidateMove);
 				}
@@ -46,7 +46,7 @@ public class Pawn extends Piece{
 			//if the square in front and to the left of the pawn contains an enemy piece OR is eligible for en passent, it is a valid move
 			if (position.getColumn() != 0) {
 				candidateMove = squares[position.getRow() + moveOffset][position.getColumn()-1];
-				if (ChessUtility.containsEnemyPiece(candidateMove,this.owner.getName()) || candidateMove.getEnPassentAvailable() == true) {
+				if (Board.containsEnemyPiece(candidateMove,this.owner.getName()) || candidateMove.getEnPassentAvailable() == true) {
 					possibleMoves.add(candidateMove);
 					aggressiveMoves.add(candidateMove);
 				}
@@ -56,7 +56,7 @@ public class Pawn extends Piece{
 		if (position.getRow() == startingRow) {
 			Square candidateMove = squares[position.getRow() + (moveOffset*2)][position.getColumn()];
 			Square inTheWay = squares[position.getRow() + moveOffset][position.getColumn()];
-			if ((!ChessUtility.containsPiece(candidateMove)) && (!ChessUtility.containsPiece(inTheWay))) {
+			if ((!Board.containsPiece(candidateMove)) && (!Board.containsPiece(inTheWay))) {
 				possibleMoves.add(candidateMove);
 			}
 		}

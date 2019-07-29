@@ -8,11 +8,17 @@ import Resources.Name;
 import Resources.Side;
 import Pieces.*;
 
+/**
+ * Player class. Handles player-specific states (check, ability to move) and player pieces.
+ * 
+ * @author Fred Reinink
+ */
 public class Player implements Serializable{
+	
+	private Name name;
 	private King king;
 	private boolean inCheck;
 	private ArrayList<Piece> pieces;
-	private Name name;
 	private boolean hasAValidMove;
 	
 	public void setinCheck(boolean inCheck) {
@@ -31,10 +37,32 @@ public class Player implements Serializable{
 		return hasAValidMove;
 	}
 	
+	public King getKing() {
+		return king;
+	}
+	
+	public Name getName() {
+		return name;
+	}
+	
+	/**
+	 * @param pieceToAdd the piece to add the this player's piece list.
+	 */
+	public void addPiece(Piece pieceToAdd) {
+		pieces.add(pieceToAdd);
+	}
+	
+	/**
+	 * @return the player's list of pieces (dead and alive).
+	 */
+	public ArrayList<Piece> getPieces(){
+		return pieces;
+	}
+	
 	/**
 	 * Sets possible moves for all alive pieces belonging to this player.
 	 * 
-	 * @param board
+	 * @param board the instance of board the pieces are on.
 	 */
 	public void setPossibleMoves(Board board){
 		for (Piece p : pieces) {
@@ -47,7 +75,7 @@ public class Player implements Serializable{
 	/**
 	 * Sets valid moves for all alive pieces belonging to this player.
 	 * 
-	 * @param board
+	 * @param board the instance of board the pieces are on.
 	 */
 	public void setValidMoves(Board board) {
 		hasAValidMove = false;
@@ -59,15 +87,11 @@ public class Player implements Serializable{
 		}
 	}
 	
-	public King getKing() {
-		return king;
-	}
-	
 	/**
-	 * Gets the rook on the specified side
+	 * Gets the rook belonging to this player on the specified side.
 	 * 
-	 * @param side the side of the desired rook
-	 * @return the Rook if it exists, null otherwise
+	 * @param side the Side of the desired rook.
+	 * @return the Rook if it exists, null otherwise.
 	 */
 	public Rook getRookonSide(Side side) {
 		for (Piece piece : pieces) {
@@ -77,27 +101,8 @@ public class Player implements Serializable{
 		}
 		return null;
 	}
-	
+
 	/**
-	 * @return player's pieces list
-	 */
-	public ArrayList<Piece> getPieces(){
-		return pieces;
-	}
-	
-	public String toString() {
-		return pieces.toString();
-	}
-	
-	/**
-	 * @return the player's name 
-	 */
-	public Name getName() {
-		return name;
-	}
-	
-	/**
-	 * Sole Constructor.
 	 * Initializes the players name, and creates a player's initial pieces.
 	 * Pieces are created according to this encoding: [pawn, pawn, pawn, pawn, pawn, pawn, pawn, pawn, rook(left), knight, bishop, queen, king, bishop, knight, rook(right)]
 	 * 
@@ -105,10 +110,8 @@ public class Player implements Serializable{
 	 */
 	public Player(Name name) {
 		this.name = name;
-
 		pieces = new ArrayList<Piece>();
 		
-		//Create pawns
 		for (int i = 0; i < 8 ; i++) {
 			pieces.add(new Pawn(this));
 		}
@@ -125,7 +128,4 @@ public class Player implements Serializable{
 		pieces.add(new Rook(this,Side.right));
 	}
 	
-	public void addPiece(Piece pieceToAdd) {
-		pieces.add(pieceToAdd);
-	}
 }

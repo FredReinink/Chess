@@ -1,12 +1,8 @@
 package Pieces;
 
-import java.util.ArrayList;
-
 import Logic.Board;
-import Logic.ChessUtility;
 import Logic.Coordinate;
 import Logic.Player;
-import Logic.Square;
 
 public class Knight extends Piece{
 
@@ -19,8 +15,8 @@ public class Knight extends Piece{
 		resetPossibleMoves();
 		resetAggressiveMoves();
 		
-		int currentRow = this.position.getRow();
-		int currentColumn = this.position.getColumn();
+		int currentRow = position.getRow();
+		int currentColumn = position.getColumn();
 		
 		for (int i = -2; i <= 2; i+=4) {
 			for (int j = -1; j <= 1; j+=2) {

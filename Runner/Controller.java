@@ -89,7 +89,7 @@ public class Controller implements MouseListener{
 	}
 	
 	/**
-	 * Ends the game and calls relevant GUI methods to display the specified player as the winner.
+	 * Ends the game and calls relevant GUI methods to display the specified player as the winner. Closes the game if the player decides to quit, restarts otherwise.
 	 * 
 	 * @param winner the Name of the winner
 	 */
@@ -101,6 +101,11 @@ public class Controller implements MouseListener{
 		}
 	}
 	
+	/**
+	 * Ends the game and calls relevant GUI methods to display a draw. Closes the game if the player decides to quit, restarts otherwise.
+	 * 
+	 * @param typeOfDraw
+	 */
 	public void draw(String typeOfDraw) {
 		if (!display.continueAfterDraw(typeOfDraw)){
 			display.closeGame();

@@ -32,7 +32,7 @@ public abstract class Piece implements Serializable{
 	}
 	
 	/**
-	 * Moves this piece to the desired position on the board
+	 * Moves this piece to the desired position on the board and handles all special conditions related to moving a piece. 
 	 * 
 	 * @param board the instance of the board the piece is on
 	 * @param newPosition coordinate of the desired position
@@ -118,10 +118,10 @@ public abstract class Piece implements Serializable{
 		boolean blocked = false;
 		if (candidateMove.getPiece() == null) {
 			possibleMoves.add(candidateMove);
-		} else if (ChessUtility.containsEnemyPiece(candidateMove,this.owner.getName())) {
+		} else if (Board.containsEnemyPiece(candidateMove,this.owner.getName())) {
 			possibleMoves.add((candidateMove));
 			blocked = true;
-		} else if (ChessUtility.containsFriendlyPiece(candidateMove,this.owner.getName())) {
+		} else if (Board.containsFriendlyPiece(candidateMove,this.owner.getName())) {
 			blocked = true;
 		}
 		return blocked;
@@ -138,7 +138,7 @@ public abstract class Piece implements Serializable{
 	protected void pointMoveHelper(Board board, Coordinate c) {
 		if (c.isOffBoard() == false) {
 			Square candidateMove = board.getSquares()[c.getRow()][c.getColumn()];
-			if (!ChessUtility.containsFriendlyPiece(candidateMove,this.owner.getName())) {
+			if (!Board.containsFriendlyPiece(candidateMove,this.owner.getName())) {
 				possibleMoves.add(candidateMove);
 			}
 		}
