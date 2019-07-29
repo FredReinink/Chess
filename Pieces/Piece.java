@@ -38,7 +38,7 @@ public abstract class Piece implements Serializable{
 	 * @param newPosition coordinate of the desired position
 	 */
 	public void move(Board board, Coordinate newPosition) {
-		castleForfeitChecker();
+		castleForfeitChecker(board);
 		enPassentHandler(board, newPosition);
 		castlingHandler(board, newPosition);
 		
@@ -72,7 +72,7 @@ public abstract class Piece implements Serializable{
 	 * @param board
 	 * @param newPosition
 	 */
-	public void castleForfeitChecker() {
+	public void castleForfeitChecker(Board board) {
 	}
 	
 	/**
@@ -228,6 +228,5 @@ public abstract class Piece implements Serializable{
 	 * @param board the instance of the board the piece is on
 	 */
 	public abstract void setPossibleMoves(Board board);
-
 
 }

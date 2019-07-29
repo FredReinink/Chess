@@ -19,7 +19,7 @@ public class Square implements Serializable{
 	public void setEnPassentAvailable(boolean b) {
 		enPassentAvailable = b;
 	}
-	
+
 	public boolean getEnPassentAvailable() {
 		return enPassentAvailable;
 	}
@@ -31,11 +31,11 @@ public class Square implements Serializable{
 	public Coordinate getPosition() {
 		return position;
 	}
-	
+
 	public int getRow() {
 		return position.getRow();
 	}
-	
+
 	public int getColumn() {
 		return position.getColumn();
 	}
@@ -58,7 +58,7 @@ public class Square implements Serializable{
 	public void setPiece(Piece pieceToSet) {
 		if (pieceToSet != null) {
 			pieceToSet.setPosition(position);
-			
+
 			if (piece != null) {
 				piece.setDead(true);
 			}

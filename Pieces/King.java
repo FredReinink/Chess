@@ -1,7 +1,5 @@
 package Pieces;
 
-import java.util.ArrayList;
-
 import Logic.Board;
 import Logic.ChessUtility;
 import Logic.Coordinate;
@@ -11,15 +9,25 @@ import Resources.Name;
 import Resources.Side;
 
 public class King extends Piece {
-	boolean leftCastleAvailable;
-	boolean rightCastleAvailable;
+	private boolean leftCastleAvailable;
+	private boolean rightCastleAvailable;
 
 
 	public boolean isLeftCastleAvailable() {
 		return leftCastleAvailable;
 	}
 
-	public void setLeftCastleAvailable(boolean leftCastleAvailable) {
+	/**
+	 * Sets leftCastleAvailable. If this method signifies a player has forfeited left castling rights, calls clearPastStates() on the board.
+	 * 
+	 * @param leftCastleAvailable
+	 * @param board the instance of board this piece is on
+	 */
+	public void setLeftCastleAvailable(boolean leftCastleAvailable, Board board) {
+		if (this.leftCastleAvailable && !leftCastleAvailable) {
+			board.clearPastStates();
+		}
+		
 		this.leftCastleAvailable = leftCastleAvailable;
 	}
 
@@ -27,7 +35,18 @@ public class King extends Piece {
 		return leftCastleAvailable;
 	}
 
-	public void setRightCastleAvailable(boolean rightCastleAvailable) {
+	
+	/**
+	 * Sets rightCastleAvailable. If this method signifies a player has forfeited right castling rights, calls clearPastStates() on the board.
+	 * 
+	 * @param rightCastleAvailable
+	 * @param board the instance of board this piece is on
+	 */
+	public void setRightCastleAvailable(boolean rightCastleAvailable, Board board) {
+		if (this.rightCastleAvailable && !rightCastleAvailable) {
+			board.clearPastStates();
+		}
+		
 		this.rightCastleAvailable = rightCastleAvailable;
 	}
 
@@ -230,9 +249,9 @@ public class King extends Piece {
 	}
 
 	@Override
-	public void castleForfeitChecker() {
-		setLeftCastleAvailable(false);
-		setRightCastleAvailable(false);
+	public void castleForfeitChecker(Board board) {
+		setLeftCastleAvailable(false, board);
+		setRightCastleAvailable(false, board);
 	}
 
 }

@@ -11,6 +11,11 @@ public class Coordinate implements Serializable{
 		this.column = column;
 	}
 	
+	/**
+	 * Determines if this and a specified coordinate have the same row and column values.
+	 * 
+	 * @param coordToCompare
+	 */
 	public boolean equals(Coordinate coordToCompare) {
 		if (row == coordToCompare.getRow()) {
 			if (column == coordToCompare.getColumn()) {

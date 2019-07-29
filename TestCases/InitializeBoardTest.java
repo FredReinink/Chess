@@ -1,6 +1,4 @@
 package TestCases;
-import GUI.*;
-
 
 import Logic.*;
 import Pieces.*;
@@ -97,8 +95,53 @@ class InitializeBoardTest {
 		assertTrue(piece76 instanceof Knight && piece76.getOwner() == white);
 		Piece piece77 = squares[7][7].getPiece();
 		assertTrue(piece77 instanceof Rook && piece77.getOwner() == white);
+	}
+	
+	/**
+	 * Positive and negative tests getStateEncoding() method in Board
+	 * 
+	 */
+	@Test
+	void isSameStateTest() {
+		Player white = new Player(Name.white);
+		Player black = new Player(Name.black);
 		
-
+		//both boards are identical
+		Board board1 = new Board(white,black, new Controller());
+		Board board2 = new Board(white,black, new Controller());
+		
+		assertTrue((board1.getStateEncoding()).equals((board2.getStateEncoding())), "Two identical blank boards should be equal");
+		
+		//One board has three pieces, the other board has two
+		King whiteKing = new King(white);
+		Rook whiteRook = new Rook(white);
+		King blackKing = new King(black);
+		
+		board1.placePiece(whiteKing, Board.WHITE_KING_STARTING_POSITION);
+		board1.placePiece(whiteRook, Board.WHITE_ROOK_LEFT_CASTLE_POSITION);
+		board1.placePiece(blackKing, Board.BLACK_KING_LEFT_CASTLE_POSITION);
+		
+		board2.placePiece(whiteKing, Board.WHITE_KING_STARTING_POSITION);
+		board2.placePiece(blackKing, Board.BLACK_KING_LEFT_CASTLE_POSITION);
+		
+		assertFalse((board1.getStateEncoding()).equals((board2.getStateEncoding())), "Two boards with non identical piece positions should not be equal");
+		
+		//both boards have three pieces in identical positions
+		board2.placePiece(whiteRook, Board.WHITE_ROOK_LEFT_CASTLE_POSITION);
+		assertTrue((board1.getStateEncoding()).equals((board2.getStateEncoding())), "Two boards with identical piece positions should be equal");
+		
+		//both boards have three pieces in identical positions but one has an en passent variable set on square 0,0
+		board2.getSquares()[0][0].setEnPassentAvailable(true);
+		assertFalse((board1.getStateEncoding()).equals((board2.getStateEncoding())), "Two boards with identical piece positions but non identical en passent variables should not be equal");
+		
+		//both boards have three pieces in identical positions as well as en passent variables set in square 0,0
+		board1.getSquares()[0][0].setEnPassentAvailable(true);
+		assertTrue((board1.getStateEncoding()).equals((board2.getStateEncoding())), "Two boards with identical piece positions and identical en passent variables should be equal");
+		
+		//tests a board that has been copied using ChessUtility.deepCopy()
+		Board copiedBoard = (Board) ChessUtility.deepCopy(board1);
+		assertTrue((board1.getStateEncoding()).equals((copiedBoard.getStateEncoding())), "A board and a deep copied version of itself should be equal");
+		
 	}
 
 }

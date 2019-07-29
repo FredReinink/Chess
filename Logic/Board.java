@@ -2,6 +2,10 @@ package Logic;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
 
 import Pieces.*;
 import Resources.Name;
@@ -31,14 +35,17 @@ public class Board implements Serializable{
 	public static final Coordinate WHITE_ROOK_RIGHT_CASTLE_POSITION = new Coordinate(WHITE_KING_ROW, 5);
 	public static final Coordinate BLACK_ROOK_LEFT_CASTLE_POSITION = new Coordinate(BLACK_KING_ROW, 3);
 	public static final Coordinate BLACK_ROOK_RIGHT_CASTLE_POSITION = new Coordinate(BLACK_KING_ROW, 5);
+	
 
 	private transient Controller controller;
 
 	private Square[][] board;
 	private Player white;
 	private Player black;
-	private Board previousState;
-
+	
+	//past board states mapped to values corresponding to the number of times that state has occurred
+	private HashMap<String,Integer> pastStates = new HashMap<String,Integer>();
+	
 	public Controller getController() {
 		return controller;
 	}
@@ -58,8 +65,12 @@ public class Board implements Serializable{
 		return board;
 	}
 	
-	public boolean equals(Board boardToCompare) {
-		return false;
+	/**
+	 * Clears all mappings in the pastStates map. For efficiency, call this method any time an irreversible move occurs.
+	 * 
+	 */
+	public void clearPastStates() {
+		pastStates.clear();
 	}
 
 	/**
@@ -70,6 +81,37 @@ public class Board implements Serializable{
 		setCheck();
 		setValidMoves();
 		winConditionHandler();
+	}
+	
+	/**
+	 * Adds a past board state to the pastStates hashMap and increments the number of times the board state has been encountered. 
+	 * If this board state has never been encountered before, initializes it in the pastStates hashMap with 1 occurrence.
+	 * Returns true if the same board state is set to be added for the third time, meaning a three-fold repetition has occurred. 
+	 * 
+	 * @return Returns true when a three-fold repetition has occurred. False otherwise.
+	 */
+	public boolean addState() {
+		String stateEncoding = getStateEncoding();
+		
+		boolean threeFoldRepetition = false;
+		
+		boolean alreadyAdded = false;
+		
+		for (String key : pastStates.keySet()) {
+			if (stateEncoding.equals(key)) {
+				alreadyAdded = true;
+				if (pastStates.get(key) == 2) {
+					threeFoldRepetition = true;
+				} else {
+					pastStates.put(key, pastStates.get(key) + 1);
+				}
+			}
+		}
+		
+		if (!alreadyAdded) {
+			pastStates.put(stateEncoding, 1);
+		}
+		return threeFoldRepetition;
 	}
 
 	/**
@@ -82,15 +124,18 @@ public class Board implements Serializable{
 				if (white.isInCheck()) {
 					controller.checkmate(black);
 				} else {
-					controller.stalemate();
+					controller.draw("Stalemate");
 				}
 			} else if (!black.hasAValidMove()) {
 				if (black.isInCheck()) {
 					controller.checkmate(white);
 				} else {
-					controller.stalemate();
+					controller.draw("Stalemate");
 				}
 			}
+		}
+		if (addState()) {
+			controller.draw("Three-Fold Repetition");
 		}
 	}
 
@@ -176,22 +221,6 @@ public class Board implements Serializable{
 		black.setValidMoves(this);
 	}
 
-	public String toString() {
-		String result = "";
-
-		result += "Player white has pieces: " + white.toString();
-		result += "\nPlayer black has pieces: " + black.toString();
-		result += "\nBoard representation:\n";
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				result += " " + board[i][j].toString();
-			}
-			result += "\n";	
-		}
-
-		return result;
-	}
-
 	/**
 	 * Sole constructor.
 	 * Builds a board out of squares. Each square is initialized with x and y coordinates.
@@ -270,12 +299,99 @@ public class Board implements Serializable{
 	/**
 	 * Places one piece on the square with the designated coordinates
 	 * 
-	 * @param p the piece to be placed
-	 * @param row the row of the square to place the piece
-	 * @param column the column coordinate of the square to place the piece
+	 * @param pieceToPlace the piece to be placed
+	 * @param newPosition the coordinate of the position to place the piece at
 	 */
-	public void placePiece(Piece p, Coordinate position) {
-		board[position.getRow()][position.getColumn()].setPiece(p);
+	public void placePiece(Piece pieceToPlace, Coordinate newPosition) {
+		Square newSquare = board[newPosition.getRow()][newPosition.getColumn()];
+		if (pieceToPlace != null && newSquare.getPiece() != null) {
+			//irreversible move (piece capture)
+			clearPastStates();
+		}
+		
+		newSquare.setPiece(pieceToPlace);
+	}
+	
+	
+	/**
+	 * Calculates and returns an encoding that represents this board's unique state. Does not include castling rights (because pastStates is cleared every time castling rights change).
+	 * 
+	 * Encoding: From left to right and top to bottom, squares are represented by the piece occupying that square as well as their en Passent availability. 
+	 * 
+	 * Empty square: 0
+	 * 
+	 * White Pawn: a
+	 * White Rook: b
+	 * White Knight: c
+	 * White Bishop: d
+	 * White Queen: e
+	 * White King: f
+	 * 
+	 * Black Pawn: g
+	 * Black Rook: h
+	 * Black Knight: i
+	 * Black Bishop: j
+	 * Black Queen: k
+	 * Black King: l
+	 * 
+	 * If en passent is available for a particular square, z is appended to the square's encoding.
+	 * 
+	 * @return a string representing the board's unique state.
+	 */
+	public String getStateEncoding() {
+		String stateEncoding = ""; 
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j <8; j++) {
+				Square square = board[i][j];
+				Piece piece = square.getPiece();
+				
+				if (piece == null) {
+					stateEncoding += "0";
+				} else if (piece instanceof Pawn) {
+					if (piece.getOwner().getName() == Name.white) {
+						stateEncoding += "a";
+					} else {
+						stateEncoding += "g";
+					}
+				} else if (piece instanceof Rook) {
+					if (piece.getOwner().getName() == Name.white) {
+						stateEncoding += "b";
+					} else {
+						stateEncoding += "h";
+					}
+				} else if (piece instanceof Knight) {
+					if (piece.getOwner().getName() == Name.white) {
+						stateEncoding += "c";
+					} else {
+						stateEncoding += "i";
+					}
+				} else if (piece instanceof Bishop) {
+					if (piece.getOwner().getName() == Name.white) {
+						stateEncoding += "d";
+					} else {
+						stateEncoding += "j";
+					}
+				} else if (piece instanceof Queen) {
+					if (piece.getOwner().getName() == Name.white) {
+						stateEncoding += "e";
+					} else {
+						stateEncoding += "k";
+					}
+				} else if (piece instanceof King) {
+					if (piece.getOwner().getName() == Name.white) {
+						stateEncoding += "f";
+					} else {
+						stateEncoding += "l";
+					}
+				}
+				
+				if (square.getEnPassentAvailable()) {
+					stateEncoding += "z";
+				}
+			}
+		}
+		
+		return stateEncoding;
 	}
 
 }

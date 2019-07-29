@@ -204,11 +204,11 @@ public class Display extends JPanel{
 	 * 
 	 * @return whether the user wants to continue playing. False otherwise
 	 */
-	public boolean continueAfterDraw() {
+	public boolean continueAfterDraw(String typeOfDraw) {
 		Object[] options = {"Restart",
 		"Quit"};
 		int n = JOptionPane.showOptionDialog(frame,
-				"Draw!",
+				"Draw! " + typeOfDraw,
 				"Draw!",
 				JOptionPane.YES_NO_OPTION,
 				JOptionPane.PLAIN_MESSAGE,

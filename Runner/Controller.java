@@ -31,6 +31,7 @@ public class Controller implements MouseListener{
 	 * Switches the turn to the other player
 	 */
 	public void switchTurn() {
+		System.out.println("Switching turns");
 		if (turn == Name.white) {
 			turn = Name.black;
 		} else {
@@ -47,9 +48,9 @@ public class Controller implements MouseListener{
 	}
 	
 	public Controller() {
+		turn = Name.white;
 		createPlayers();
 		createBoard();
-		turn = Name.white;
 	}
 
 	public void setDisplay(Display d) {
@@ -82,8 +83,8 @@ public class Controller implements MouseListener{
 		createPlayers();
 		createBoard();
 		display.setBoard(board);
-		turn = Name.white;
 		selectedSquare = null;
+		turn = Name.black; //switchTurn() is called immediately after and so after a restart it's still whites turn first.
 		start();
 	}
 	
@@ -100,8 +101,8 @@ public class Controller implements MouseListener{
 		}
 	}
 	
-	public void stalemate() {
-		if (!display.continueAfterDraw()){
+	public void draw(String typeOfDraw) {
+		if (!display.continueAfterDraw(typeOfDraw)){
 			display.closeGame();
 		} else {
 			restart();
@@ -115,6 +116,7 @@ public class Controller implements MouseListener{
 	 */
 	public void executeMove(Square pressedSquare) {
 		selectedSquare.getPiece().move(board, pressedSquare.getPosition());
+		board.update();
 		switchTurn();
 	}
 	
@@ -152,7 +154,6 @@ public class Controller implements MouseListener{
 		} else if (pressedSquare.getPiece() != null && pressedSquare.getPiece().getOwner().getName() == turn) {
 			setSelectedSquare(pressedSquare);
 		}
-		board.update();
 		display.revalidate();
 		display.repaint();
 	}

@@ -64,11 +64,11 @@ public class Rook extends Piece{
 	}
 
 	@Override
-	public void castleForfeitChecker() {
+	public void castleForfeitChecker(Board board) {
 		if (side == Side.left) {
-			owner.getKing().setLeftCastleAvailable(false);
+			owner.getKing().setLeftCastleAvailable(false, board);
 		} else if (side == Side.right) {
-			owner.getKing().setRightCastleAvailable(false);
+			owner.getKing().setRightCastleAvailable(false, board);
 		}
 	}
 }
