@@ -26,6 +26,12 @@ public class Board implements Serializable{
 
 	public static final int ROW_4 = 4;
 	public static final int ROW_3 = 3;
+	
+	public static final int COL_1 = 1;
+	public static final int COL_2 = 2;
+	public static final int COL_3 = 3;
+	public static final int COL_5 = 5;
+	public static final int COL_6 = 6;
 
 	public static final int BLACK_KING_ROW = 0;
 	public static final int BLACK_PAWN_ROW = 1;
@@ -320,6 +326,44 @@ public class Board implements Serializable{
 		newSquare.setPiece(pieceToPlace);
 	}
 	
+	/**
+	 * Determines if there is a piece on the square.
+	 * 
+	 * @param square the square to check.
+	 * @return true if there is a piece, false otherwise.
+	 */
+	public static boolean containsPiece(Square square) {
+		if (square.getPiece() != null) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Determines if there is an enemy piece on the square.
+	 * 
+	 * @param square the square to check.
+	 * @return true if there is an enemy piece, false otherwise.
+	 */
+	public static boolean containsEnemyPiece(Square square, Name name) {
+		if ((square.getPiece() != null) && (!(square.getPiece().getOwner().getName() == name))) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Determines if there is a friendly piece on the square.
+	 * 
+	 * @param square the square to check.
+	 * @return true if there is a friendly piece, false otherwise.
+	 */
+	public static boolean containsFriendlyPiece(Square square, Name name) {
+		if ((square.getPiece() != null) && (square.getPiece().getOwner().getName() == name)) {
+			return true;
+		}
+		return false;
+	}
 	
 	/**
 	 * Calculates and returns an encoding that represents this board's unique state. Does not include castling rights (because pastStates is cleared every time castling rights change).
@@ -401,41 +445,4 @@ public class Board implements Serializable{
 		
 		return stateEncoding;
 	}
-
-	/**
-	 * Determines if there is a piece on the square
-	 * @param square the square to check
-	 * @return true if there is a piece, false otherwise
-	 */
-	public static boolean containsPiece(Square square) {
-		if (square.getPiece() != null) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Determines if there is an enemy piece on the square
-	 * @param square the square to check
-	 * @return true if there is an enemy piece, false otherwise
-	 */
-	public static boolean containsEnemyPiece(Square square, Name name) {
-		if ((square.getPiece() != null) && (!(square.getPiece().getOwner().getName() == name))) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Determines if there is a friendly piece on the square
-	 * @param square the square to check
-	 * @return true if there is a friendly piece, false otherwise
-	 */
-	public static boolean containsFriendlyPiece(Square square, Name name) {
-		if ((square.getPiece() != null) && (square.getPiece().getOwner().getName() == name)) {
-			return true;
-		}
-		return false;
-	}
-
 }

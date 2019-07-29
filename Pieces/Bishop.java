@@ -1,7 +1,12 @@
 package Pieces;
 
-import Logic.*;
+import Logic.Board;
+import Logic.Player;
+import Logic.Square;
 
+/**
+ * @author Fred Reinink
+ */
 public class Bishop extends Piece{
 
 	public Bishop(Player owner) {
@@ -29,7 +34,7 @@ public class Bishop extends Piece{
 		blocked = false;
 		row = position.getRow() - 1;
 		column = position.getColumn() + 1;
-		while (row >= 0 && column <= 7 && blocked == false) {
+		while (row >= 0 && column < Board.NUM_COLS && blocked == false) {
 			blocked = vectorMoveHelper(squares[row][column]);
 			row--;
 			column++;
@@ -39,7 +44,7 @@ public class Bishop extends Piece{
 		blocked = false;
 		row = position.getRow() + 1;
 		column = position.getColumn() - 1;
-		while (row <= 7 && column >= 0 && blocked == false) {
+		while (row < Board.NUM_ROWS && column >= 0 && blocked == false) {
 			blocked = vectorMoveHelper(squares[row][column]);
 			row++;
 			column--;
@@ -49,7 +54,7 @@ public class Bishop extends Piece{
 		blocked = false;
 		row = position.getRow() + 1;
 		column = position.getColumn() + 1;
-		while (row <= 7 && column <= 7 && blocked == false) {
+		while (row < Board.NUM_ROWS && column < Board.NUM_COLS && blocked == false) {
 			blocked = vectorMoveHelper(squares[row][column]);
 			row++;
 			column++;

@@ -57,6 +57,14 @@ public class Display extends JPanel{
 	public void setBoard(Board board) {
 		this.board = board;
 	}
+	
+	/**
+	 * Repaints the JFrame.
+	 */
+	public void update() {
+		revalidate();
+		repaint();
+	}
 
 	/**
 	 * Sole constructor. Creates and initializes the JFrame with needed parameters.
@@ -159,8 +167,8 @@ public class Display extends JPanel{
 	public void drawImage(File fileToDraw, Square squareToDraw) {
 		Image pieceImage = getScaledImage(fileToDraw);
 		
-		int x = transformCoordinate(squareToDraw.getColumn());
-		int y = transformCoordinate(squareToDraw.getRow());
+		int x = transformBoardCoordinate(squareToDraw.getColumn());
+		int y = transformBoardCoordinate(squareToDraw.getRow());
 		g.drawImage(pieceImage, x, y, null);
 	}
 
@@ -302,12 +310,23 @@ public class Display extends JPanel{
 	/**
 	 * Transforms a board coordinate (row # or column #) into an absolute coordinate on the JFrame.
 	 * Ex: Row 2, Column 3 on the board could be x = 160, y = 240 on the JFrame.
-	 * s
+	 * 
 	 * @param coord the board coordinate to transform.
-	 * @return returns the absolute position of the coordinate.
+	 * @return the JFrame coordinate corresponding to the board coordinate.
 	 */
-	public int transformCoordinate(int coord) {
+	public static int transformBoardCoordinate(int coord) {
 		return coord * CHECKER_SIZE;
+	}
+
+	/**
+	 * Transforms a JFrame coordinate (x, y) into a board coordinate (row # or column #).
+	 * Ex: x = 160, y = 240 on the JFrame could be Row 2, Column 3 on the board.
+	 * 
+	 * @param coord the JFrame coordinate to transform.
+	 * @return the board coordinate corresponding to the JFrame coordinate.
+	 */
+	public static int transformFrameCoordinate(int coord) {
+		return coord / CHECKER_SIZE;
 	}
 	
 	/**

@@ -1,14 +1,15 @@
 package Pieces;
 
-import java.util.ArrayList;
-
 import Logic.Board;
-import Logic.ChessUtility;
-import Logic.Coordinate;
 import Logic.Player;
 import Logic.Square;
 import Resources.Side;
 
+/**
+ * Handles rook related movement and castle forfeitting.
+ * 
+ * @author Fred Reinink
+ */
 public class Rook extends Piece{
 	private Side side;
 	
@@ -16,6 +17,9 @@ public class Rook extends Piece{
 		return side;
 	}
 
+	/**
+	 * Creates a rook on an initial side.
+	 */
 	public Rook(Player owner, Side side) {
 		super(owner);
 		this.side = side;

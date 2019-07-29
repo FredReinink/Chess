@@ -1,8 +1,6 @@
 package Runner;
 
 import java.awt.event.MouseEvent;
-
-
 import java.awt.event.MouseListener;
 
 import GUI.Display;
@@ -10,6 +8,11 @@ import Resources.Name;
 import Logic.*;
 import Pieces.*;
 
+/**
+ * Manager class. Handles GUI/logic communication and overall game states. 
+ * 
+ * @author Fred Reinink
+ */
 public class Controller implements MouseListener{
 	
 	private Display display = null;
@@ -17,7 +20,7 @@ public class Controller implements MouseListener{
 	private Player black;
 	private Board board;
 	private Name turn;
-	private Square selectedSquare;
+	private Square selectedSquare; //The current user selected square
 	
 	public void setSelectedSquare(Square s) {
 		selectedSquare = s;
@@ -25,18 +28,6 @@ public class Controller implements MouseListener{
 	
 	public Square getSelectedSquare() {
 		return selectedSquare;
-	}
-	
-	/**
-	 * Switches the turn to the other player
-	 */
-	public void switchTurn() {
-		System.out.println("Switching turns");
-		if (turn == Name.white) {
-			turn = Name.black;
-		} else {
-			turn = Name.white;
-		}
 	}
 	
 	public Name getTurn() {
@@ -47,19 +38,16 @@ public class Controller implements MouseListener{
 		return board;
 	}
 	
+	public void setDisplay(Display d) {
+		display = d;
+	}
+	
 	public Controller() {
 		turn = Name.white;
 		createPlayers();
 		createBoard();
 	}
-
-	public void setDisplay(Display d) {
-		display = d;
-	}
 	
-	/**
-	 * Creates two new player objects
-	 */
 	public void createPlayers() {
 		white = new Player(Name.white);
 		black = new Player(Name.black);
@@ -70,14 +58,25 @@ public class Controller implements MouseListener{
 	}
 	
 	/**
-	 * Starts the game
+	 * Switches the turn to the other player
+	 */
+	public void switchTurn() {
+		if (turn == Name.white) {
+			turn = Name.black;
+		} else {
+			turn = Name.white;
+		}
+	}
+	
+	/**
+	 * Starts the game.
 	 */
 	public void start() {
 		board.update();
 	}
 	
 	/**
-	 * Restarts the game
+	 * Restarts the game.
 	 */
 	public void restart() {
 		createPlayers();
@@ -86,6 +85,46 @@ public class Controller implements MouseListener{
 		selectedSquare = null;
 		turn = Name.black; //switchTurn() is called immediately after and so after a restart it's still whites turn first.
 		start();
+	}
+	
+	/**
+	 * Moves the piece on the selected square to the new selected square.
+	 * 
+	 * @param newSelectedSquare the square to move the piece to.
+	 */
+	public void executeMove(Square newSelectedSquare) {
+		selectedSquare.getPiece().move(board, newSelectedSquare.getPosition());
+		board.update();
+		switchTurn();
+	}
+	
+	@Override
+	public void mousePressed(MouseEvent event) {
+		int row = Display.transformFrameCoordinate(event.getY());
+		int column = Display.transformFrameCoordinate(event.getX());
+		
+		squarePressed(row, column);
+	}
+	
+	/**
+	 * If the previously selected square contains a piece and the newly selected square is a square that the piece is able to move to, moves the piece to the new square.
+	 * If the newly selected square contains a piece that can move on the current turn, displays it's valid moves.
+	 * 
+	 * @param row the row of the square pressed.
+	 * @param column the column of the square pressed.
+	 */
+	public void squarePressed(int row, int column) {
+		
+		Square[][] squares = board.getSquares();
+		Square newSelectedSquare = squares[row][column];
+		
+		if (selectedSquare != null && selectedSquare.getPiece() != null && selectedSquare.getPiece().getValidMoves().contains(newSelectedSquare)) {
+			executeMove(newSelectedSquare);
+		} else if (newSelectedSquare.getPiece() != null && newSelectedSquare.getPiece().getOwner().getName() == turn) {
+			setSelectedSquare(newSelectedSquare);
+		}
+		
+		display.update();
 	}
 	
 	/**
@@ -103,8 +142,6 @@ public class Controller implements MouseListener{
 	
 	/**
 	 * Ends the game and calls relevant GUI methods to display a draw. Closes the game if the player decides to quit, restarts otherwise.
-	 * 
-	 * @param typeOfDraw
 	 */
 	public void draw(String typeOfDraw) {
 		if (!display.continueAfterDraw(typeOfDraw)){
@@ -112,22 +149,6 @@ public class Controller implements MouseListener{
 		} else {
 			restart();
 		}
-	}
-	
-	/**
-	 * Executes a move for the piece on the selected square to the specified new square.
-	 * 
-	 * @param pressedSquare the square to move the piece to
-	 */
-	public void executeMove(Square pressedSquare) {
-		selectedSquare.getPiece().move(board, pressedSquare.getPosition());
-		board.update();
-		switchTurn();
-	}
-	
-	@Override
-	public void mousePressed(MouseEvent e) {
-		squarePressed(e);
 	}
 	
 	/**
@@ -151,24 +172,7 @@ public class Controller implements MouseListener{
 		} 
 		return selectedPiece;
 	}
-	
-	public void squarePressed(MouseEvent e) {
-		Square pressedSquare = board.getSquares()[e.getY() / Display.CHECKER_SIZE][e.getX() / Display.CHECKER_SIZE];
-		if (selectedSquare != null && selectedSquare.getPiece() != null && selectedSquare.getPiece().getValidMoves().contains(pressedSquare)) {
-			executeMove(pressedSquare);
-		} else if (pressedSquare.getPiece() != null && pressedSquare.getPiece().getOwner().getName() == turn) {
-			setSelectedSquare(pressedSquare);
-		}
-		display.revalidate();
-		display.repaint();
-	}
-	
-	
-	
-	@Override
-	public void mouseReleased(MouseEvent e) {
-	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
@@ -179,5 +183,9 @@ public class Controller implements MouseListener{
 
 	@Override
 	public void mouseExited(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
 	}
 }

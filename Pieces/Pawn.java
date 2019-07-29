@@ -1,8 +1,16 @@
 package Pieces;
 
-import Logic.*;
+import Logic.Board;
+import Logic.Coordinate;
+import Logic.Player;
+import Logic.Square;
 import Resources.Name;
 
+/**
+ * Handles pawn movement including en passent and promotions.
+ * 
+ * @author Fred Reinink
+ */
 public class Pawn extends Piece{
 	int startingRow;
 	int promotionRow;
