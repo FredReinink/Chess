@@ -5,6 +5,11 @@ import java.io.*;
 import Pieces.*;
 import Resources.Name;
 
+/**
+ * General Utility functions.
+ * 
+ * @author Fred Reinink
+ */
 public class ChessUtility {
 	public static final String WHITE_PAWN_PATH = "src/Resources/PieceImages/WhitePawn.png";
 	public static final String BLACK_PAWN_PATH = "src/Resources/PieceImages/BlackPawn.png";
@@ -67,6 +72,8 @@ public class ChessUtility {
 	}
 	
 	/**
+	 * Creates and returns a deep copy of the specified object using serialization. 
+	 * 
 	 * @param objectToCopy
 	 * @return Returns a deep copy of objectToCopy
 	 */
@@ -80,49 +87,13 @@ public class ChessUtility {
 			ObjectInputStream ois = new ObjectInputStream(bais);
 			return ois.readObject();
 		} catch (IOException e) {
-			System.out.println("Board Copying error: IO");
+			System.out.println("Object Copying error: IO");
 			e.printStackTrace();
 			return null;
 		} catch (ClassNotFoundException e) {
-			System.out.println("Board Copying error: ClassNotFound");
+			System.out.println("Object Copying error: ClassNotFound");
 			e.printStackTrace();
 			return null;
 		}
-	}
-
-	/**
-	 * Determines if there is a piece on the square
-	 * @param square the square to check
-	 * @return true if there is a piece, false otherwise
-	 */
-	public static boolean containsPiece(Square square) {
-		if (square.getPiece() != null) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Determines if there is an enemy piece on the square
-	 * @param square the square to check
-	 * @return true if there is an enemy piece, false otherwise
-	 */
-	public static boolean containsEnemyPiece(Square square, Name name) {
-		if ((square.getPiece() != null) && (!(square.getPiece().getOwner().getName() == name))) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Determines if there is a friendly piece on the square
-	 * @param square the square to check
-	 * @return true if there is a friendly piece, false otherwise
-	 */
-	public static boolean containsFriendlyPiece(Square square, Name name) {
-		if ((square.getPiece() != null) && (square.getPiece().getOwner().getName() == name)) {
-			return true;
-		}
-		return false;
 	}
 }

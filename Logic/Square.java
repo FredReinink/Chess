@@ -4,17 +4,18 @@ import java.io.Serializable;
 
 import Pieces.Piece;
 
+/**
+ * This is essentially just a data structure class. 
+ * One instance of a Square represents one checker on a chess board.
+ * Stores pieces and keep track of en passent availability for it's represented square.
+ * 
+ * @author Fred Reinink
+ */
 public class Square implements Serializable{
+	
 	private Coordinate position;
 	private Piece piece = null;
 	private boolean enPassentAvailable = false;
-
-	public String toString() {
-		if (piece == null) {
-			return "[              ]";
-		}
-		return piece.toString();
-	}
 
 	public void setEnPassentAvailable(boolean b) {
 		enPassentAvailable = b;
@@ -44,10 +45,10 @@ public class Square implements Serializable{
 		return piece;
 	}
 
-	public Square(Coordinate c, Piece piece) {
-		position = c;
+	public Square(Coordinate position, Piece piece) {
+		this.position = position;
 		this.piece = piece;
-		piece.setPosition(c);
+		piece.setPosition(position);
 	}
 
 	/**

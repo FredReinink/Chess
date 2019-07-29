@@ -1,13 +1,12 @@
 package Pieces;
 
-import java.util.ArrayList;
-
 import Logic.Board;
-import Logic.ChessUtility;
 import Logic.Coordinate;
 import Logic.Player;
-import Logic.Square;
 
+/**
+ * @author Fred Reinink
+ */
 public class Knight extends Piece{
 
 	public Knight(Player owner) {
@@ -19,9 +18,10 @@ public class Knight extends Piece{
 		resetPossibleMoves();
 		resetAggressiveMoves();
 		
-		int currentRow = this.position.getRow();
-		int currentColumn = this.position.getColumn();
+		int currentRow = position.getRow();
+		int currentColumn = position.getColumn();
 		
+		//knight movement is "L shaped" so a possible move = currentRow +/- 1/2 AND currentColumn +/- 2/1 
 		for (int i = -2; i <= 2; i+=4) {
 			for (int j = -1; j <= 1; j+=2) {
 				Coordinate c = new Coordinate(currentRow + i, currentColumn + j);

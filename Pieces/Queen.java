@@ -1,12 +1,11 @@
 package Pieces;
 
-import java.util.ArrayList;
-
 import Logic.Board;
-import Logic.Coordinate;
 import Logic.Player;
-import Logic.Square;
 
+/**
+ * @author Fred Reinink
+ */
 public class Queen extends Piece {
 
 	public Queen(Player owner) {
@@ -18,6 +17,7 @@ public class Queen extends Piece {
 		resetPossibleMoves();
 		resetAggressiveMoves();
 		
+		//A Queen can move as if it were a rook and a bishop.
 		Bishop bishop = new Bishop(this.owner);
 		bishop.setPosition(this.position);
 		
