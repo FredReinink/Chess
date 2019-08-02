@@ -159,7 +159,7 @@ public class Display extends JPanel{
 	}
 
 	/**
-	 * Draws the image contained by the specified file on the specified square,
+	 * Draws the image contained by the specified file on the specified square.
 	 * 
 	 * @param fileToDraw the file containing the image to draw.
 	 * @param squareToDraw the square to draw the image on.
@@ -284,7 +284,8 @@ public class Display extends JPanel{
 	}
 
 	/**
-	 * Helper method for drawPawnPromotion. Creates a JButton with properties corresponding to this function's parameters. Adds this JButton to the specified JOptionPane.
+	 * Helper method for drawPawnPromotion. Creates a JButton with properties corresponding to this function's parameters. 
+	 * Adds this JButton to the specified JOptionPane.
 	 * 
 	 * @param optionPane The option pane to add the button to.
 	 * @param buttonValue The string to assign the button's action command as.

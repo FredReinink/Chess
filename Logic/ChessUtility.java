@@ -25,8 +25,10 @@ public class ChessUtility {
 	public static final String WHITE_ROOK_PATH = "src/Resources/PieceImages/WhiteRook.png";
 	
 	/**
-	 * @param piece The piece to find the image file of
-	 * @return returns Image File of the desired piece
+	 * Finds and returns the file containing the image of the specified piece.
+	 * 
+	 * @param piece The piece to find the image file of.
+	 * @return the image File of the desired piece.
 	 */
 	public static File findFile(Piece piece) {
 		File pieceFile = null;

@@ -12,14 +12,16 @@ import Resources.Name;
 import Runner.Controller;
 
 /**
- * This class handles the chess board, including board state, win conditions, check, and is composed of all squares and pieces involved in the game it represents.
+ * This class handles the chess board, including board state, win conditions, check, and is composed of all squares and pieces.
  * 
  * @author Fred Reinink
  */
 public class Board implements Serializable{
+	
 	public static final int NUM_ROWS = 8;
 	public static final int NUM_COLS = 8;
 	
+	//Row and column #s increase starting from the top left corner (0,0).
 	public static final int WHITE_KING_ROW = 7;
 	public static final int WHITE_PAWN_ROW = 6;
 	public static final int WHITE_ENPASSENT_ROW = 5;
@@ -27,15 +29,17 @@ public class Board implements Serializable{
 	public static final int ROW_4 = 4;
 	public static final int ROW_3 = 3;
 	
+	public static final int BLACK_ENPASSENT_ROW = 2;
+	public static final int BLACK_PAWN_ROW = 1;
+	public static final int BLACK_KING_ROW = 0;
+
 	public static final int COL_1 = 1;
 	public static final int COL_2 = 2;
 	public static final int COL_3 = 3;
+	public static final int COL_4 = 4;
 	public static final int COL_5 = 5;
 	public static final int COL_6 = 6;
-
-	public static final int BLACK_KING_ROW = 0;
-	public static final int BLACK_PAWN_ROW = 1;
-	public static final int BLACK_ENPASSENT_ROW = 2;
+	public static final int COL_7 = 7;
 
 	public static final Coordinate WHITE_KING_STARTING_POSITION = new Coordinate(WHITE_KING_ROW, 4);
 	public static final Coordinate BLACK_KING_STARTING_POSITION = new Coordinate(BLACK_KING_ROW, 4);
@@ -80,10 +84,51 @@ public class Board implements Serializable{
 	}
 	
 	/**
-	 * Clears all mappings in the pastStates map. For efficiency, call this method any time an irreversible move occurs.
+	 * Clears all mappings in the pastStates map. Used for tracking board repetitions. 
+	 * For efficiency, call this method any time an irreversible move occurs.
 	 */
 	public void clearPastStates() {
 		pastStates.clear();
+	}
+	
+	/**
+	 * Builds a board out of squares and places pieces in their designated starting position.
+	 * 
+	 * @param white the player with Name white.
+	 * @param black the player with Name black.
+	 * @param controller the controller running this instance of the board.
+	 */
+	public Board(Player white, Player black, Controller controller) {
+		this.controller = controller;
+		this.white = white;
+		this.black = black;
+
+		squares = new Square[NUM_ROWS][NUM_COLS];
+		for (int i = 0; i < NUM_ROWS; i ++) {
+			for (int j = 0; j < NUM_COLS; j ++) {
+				squares[i][j] = new Square(new Coordinate(i,j));
+			}
+		}
+		placeOrderedPieces(white);
+		placeOrderedPieces(black);
+	}
+	
+	/**
+	 * Builds a board out of squares with only kings in their designated starting position.
+	 */
+	public Board(Player white, Player black) {
+		this.white = white;
+		this.black = black;
+
+		squares = new Square[NUM_ROWS][NUM_COLS];
+		for (int i = 0; i < NUM_ROWS; i ++) {
+			for (int j = 0; j < NUM_COLS; j ++) {
+				squares[i][j] = new Square(new Coordinate(i,j));
+			}
+		}
+		
+		placePiece(white.getKing(), WHITE_KING_STARTING_POSITION);
+		placePiece(black.getKing(), BLACK_KING_STARTING_POSITION);
 	}
 
 	/**
@@ -222,37 +267,17 @@ public class Board implements Serializable{
 	public void setPossibleMoves() {
 		white.setPossibleMoves(this);
 		black.setPossibleMoves(this);
+		white.setPossibleMoves(this);
 	}
 
 	/**
-	 * Sets all valid moves for both players. This function trims possible moves that are illegal and so this function should only be called after setPossibleMoves().
+	 * Sets all valid moves for both players. This function trims possible moves that are illegal and so should only be called after setPossibleMoves().
 	 * A valid move is a move that a player is legally allowed to make.
 	 */
 	public void setValidMoves() {
 		white.setValidMoves(this);
 		black.setValidMoves(this);
-	}
-
-	/**
-	 * Builds a board out of squares and places pieces in their designated starting position.
-	 * 
-	 * @param white the player with Name white.
-	 * @param black the player with Name black.
-	 * @param controller the controller running this instance of the board.
-	 */
-	public Board(Player white, Player black, Controller controller) {
-		this.controller = controller;
-		this.white = white;
-		this.black = black;
-
-		squares = new Square[NUM_ROWS][NUM_COLS];
-		for (int i = 0; i < NUM_ROWS; i ++) {
-			for (int j = 0; j < NUM_COLS; j ++) {
-				squares[i][j] = new Square(new Coordinate(i,j));
-			}
-		}
-		placeOrderedPieces(white);
-		placeOrderedPieces(black);
+		white.setValidMoves(this);
 	}
 
 	/**
@@ -368,7 +393,7 @@ public class Board implements Serializable{
 	/**
 	 * Calculates and returns an encoding that represents this board's unique state. Does not include castling rights (because pastStates is cleared every time castling rights change).
 	 * 
-	 * Encoding: From left to right and top to bottom, squares are represented by the piece occupying that square as well as their en Passent availability. 
+	 * From left to right and top to bottom, squares are represented by the piece occupying that square as well as their en Passent availability. 
 	 * 
 	 * Empty square: 0
 	 * 

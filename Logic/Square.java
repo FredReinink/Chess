@@ -7,7 +7,7 @@ import Pieces.Piece;
 /**
  * This is essentially just a data structure class. 
  * One instance of a Square represents one checker on a chess board.
- * Stores pieces and keep track of en passent availability for it's represented square.
+ * Stores pieces and keeps track of en passent availability.
  * 
  * @author Fred Reinink
  */

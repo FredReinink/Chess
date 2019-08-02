@@ -49,8 +49,8 @@ public class Controller implements MouseListener{
 	}
 	
 	public void createPlayers() {
-		white = new Player(Name.white);
-		black = new Player(Name.black);
+		white = new Player(Name.white, true);
+		black = new Player(Name.black, true);
 	}
 	
 	public void createBoard() {

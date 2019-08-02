@@ -19,13 +19,15 @@ public abstract class Piece implements Serializable{
 	protected Coordinate position;
 	private boolean dead = false;
 	
-	/* A possible move is a move that a piece can make purely based on a piece's rules for movement (includes potentially illegal moves where a move places the owner in check etc.). */
+	/* A possible move is a move that a piece can make purely based on a piece's rules for movement 
+	 * (includes potentially illegal moves where a move places the owner in check etc.). */
 	protected ArrayList<Square> possibleMoves = new ArrayList<Square>();
 	
 	/* A valid move is a move that a player is legally allowed to make. */
 	private ArrayList<Square> validMoves = new ArrayList<Square>();
 	
-	/* An aggressive move is a move that a piece can make where it can take an opposing piece. All possible moves are aggressive moves except in the case where the possible move is a pawn moving directly forward or a king is castling */
+	/* An aggressive move is a move that a piece can make where it can take an opposing piece. 
+	 * All possible moves are aggressive moves except in the case where the possible move is a pawn moving directly forward or a king is castling */
 	protected ArrayList<Square> aggressiveMoves = new ArrayList<Square>();
 		
 	public ArrayList<Square> getPossibleMoves(){
@@ -97,8 +99,8 @@ public abstract class Piece implements Serializable{
 	/**
 	 * Moves this piece to the desired position on the board and handles all special conditions related to moving a piece. 
 	 * 
-	 * @param board the instance of the board the piece is on
-	 * @param newPosition coordinate of the desired position
+	 * @param board the instance of the board the piece is on.
+	 * @param newPosition coordinate of the desired position.
 	 */
 	public void move(Board board, Coordinate newPosition) {
 		castleForfeitChecker(board);
@@ -114,7 +116,7 @@ public abstract class Piece implements Serializable{
 	/**
 	 * Sets all valid moves for this piece.
 	 * 
-	 * @param board the instance of the board the piece is on
+	 * @param board the instance of the board the piece is on.
 	 */
 	public void setValidMoves(Board board) {
 		resetValidMoves();
@@ -146,10 +148,10 @@ public abstract class Piece implements Serializable{
 	/**
 	 * Helper method for pieces that select specific squares to determine possible moves.
 	 * 
-	 * Adds a square corresponding to a Coordinate c to the board if it is a possible move.
+	 * Adds a square corresponding to the Coordinate positionToCheck to the board if it is a possible move.
 	 * 
 	 * @param board the instance of board the piece wants to move on.
-	 * @param c the coordinate of the square the piece wants to move to.
+	 * @param positionToCheck the coordinate of the square the piece wants to move to.
 	 */
 	protected void pointMoveHelper(Board board, Coordinate positionToCheck) {
 		
@@ -170,8 +172,8 @@ public abstract class Piece implements Serializable{
 	 * Checks if a square is a valid move. If the square contains an enemy piece, adds that square to possible moves before returning that vector as blocked.
 	 * If the square contains a friendly piece, returns that vector as immediately blocked.
 	 * 
-	 * @param candidateMove 
-	 * @return false when the vector is not blocked by the candidateMove, true otherwise
+	 * @param candidateMove the square of the possible move.
+	 * @return false when the vector is not blocked by the candidateMove, true otherwise.
 	 */
 	protected boolean vectorMoveHelper(Square candidateMove) {
 		boolean blocked = false;
@@ -229,7 +231,7 @@ public abstract class Piece implements Serializable{
 	/**
 	 * Sets all possible and aggressive moves for this piece.
 	 * 
-	 * @param board the instance of the board the piece is on
+	 * @param board the instance of the board the piece is on.
 	 */
 	public abstract void setPossibleMoves(Board board);
 

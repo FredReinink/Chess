@@ -30,7 +30,7 @@ public class King extends Piece {
 	}
 	
 	public boolean isRightCastleAvailable() {
-		return leftCastleAvailable;
+		return rightCastleAvailable;
 	}
 
 	/**
@@ -117,7 +117,9 @@ public class King extends Piece {
 		
 		if (castlingSide != null && rookPosition != null) {
 			Rook rookToMove = owner.getRookonSide(castlingSide);
-			rookToMove.move(board, rookPosition);
+			if (rookToMove != null) {
+				rookToMove.move(board, rookPosition);
+			}
 		}
 	}
 
@@ -238,6 +240,7 @@ public class King extends Piece {
 	 */
 	public boolean doesRightCastleMoveThroughCheck(Board board) {
 		Square[][] squares = board.getSquares();
+		
 		if (owner.getName() == Name.white) {
 			if (!board.isAttacked(Name.white, squares[Board.WHITE_KING_ROW][Board.COL_5])) {
 				if (!board.isAttacked(Name.white, squares[Board.WHITE_KING_ROW][Board.COL_6])) {
