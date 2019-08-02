@@ -1,5 +1,5 @@
 # Chess
-An Object-Oriented Java Chess Program.
+An Object-Oriented Java Chess Program. Uses Java Swing GUI libraries and the JUnit testing framework.
 
 ![Quick Demo](Demo.gif)
 
