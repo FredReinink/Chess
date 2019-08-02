@@ -43,7 +43,8 @@ public class Display extends JPanel{
 	public static final int FRAME_HEIGHT = CHECKER_SIZE * 8 + FRAME_HEIGHT_OFFSET;
 
 	public static final String BROWN_RGB_VALUE = "10046464";
-	public static final Color WHITE_SQUARE_COLOUR = Color.LIGHT_GRAY;
+	public static final String WHITE_RGB_VALUE = "0xD2B48F";
+	public static final Color WHITE_SQUARE_COLOUR = Color.decode(WHITE_RGB_VALUE);
 	public static final Color BLACK_SQUARE_COLOUR = Color.decode(BROWN_RGB_VALUE); 
 
 	private Controller controller;
