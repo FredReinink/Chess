@@ -1,6 +1,7 @@
 package TestCases;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -9,29 +10,25 @@ import Logic.Player;
 import Pieces.*;
 import Resources.Name;
 
-class PlayerTest {
-
-	@Test
-	void constructorTest_Name() {
-		Player p = new Player(Name.white);
-		ArrayList<Piece> pieces = p.getPieces();
-		assertEquals(Name.white, p.getName(), "Player Name failure");
-		p = new Player(Name.black);
-		pieces = p.getPieces();
-		assertEquals(Name.black, p.getName(), "Player Name failure");
-	}
+public class PlayerTest {
 	
+	/**
+	 * Tests if the piece list is initialized with the right number of pieces.
+	 */
 	@Test
 	void constructorTest_PiecesLength() {
-		Player p = new Player(Name.white);
-		ArrayList<Piece> pieces = p.getPieces();
-		assertEquals(16,pieces.size(), "Pieces length error");
+		Player player = new Player(Name.white, true);
+		ArrayList<Piece> pieces = player.getPieces();
+		assertEquals(16,pieces.size(), "A player's piece list should have 16 pieces");
 	}
 	
+	/**
+	 * Tests if the piece list is initialized with the correct order.
+	 */
 	@Test
-	void constructorTest_Pieces() {
-		Player p = new Player(Name.white);
-		ArrayList<Piece> pieces = p.getPieces();
+	void constructorTest_Order() {
+		Player player = new Player(Name.white, true);
+		ArrayList<Piece> pieces = player.getPieces();
 		assertTrue(pieces.get(0) instanceof Pawn);
 		assertTrue(pieces.get(1) instanceof Pawn);
 		assertTrue(pieces.get(2) instanceof Pawn);
