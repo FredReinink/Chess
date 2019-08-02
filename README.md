@@ -7,4 +7,4 @@ An Object-Oriented Java Chess Program.
 
 Implements most FIDE - World Chess Federation rules.
 
-Including: En passent, castling, pawn promotion, stalemate, and three-fold repetition.
+Including: Pawn promotion, castling, en passent, stalemate, and three-fold repetition.
