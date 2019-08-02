@@ -1,5 +1,5 @@
 # Chess
 An Object-Oriented Java Chess Program.
 
-![] (Demo.gif)
+![] (https://i.imgur.com/jtdZsyd.gifv)
 
