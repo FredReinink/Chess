@@ -22,7 +22,3 @@ The JUnit test suite was designed to follow black box testing practices, and tes
 ## Tools
 
 Written entirely in Java, this project makes use of the Java Swing API to run the game's GUI, as well as JUnit 5 for unit testing.
-
-## How to download and run
-
-... Will add shortly ...
